@@ -100,5 +100,10 @@ public class MainPresenter implements MainContract.Presenter{
         public void onAutosetEnded() {
 
         }
+
+        @Override
+        public void updateFreqCounterMeter(int freqResult, int counterResult) {
+
+        }
     };
 }

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Hantek6000</string>
+
+    <!--Common Dialog-->
+    <string name="alert_dialog_yes">Yes</string>
+    <string name="alert_dialog_no">No</string>
+
+    <!--Ask Demo Dialog: ask if user want to load demo device-->
+    <string name="ask_demo_dialog_message">No suitable device found.\nWould you like to use a demo device?</string>
+    <string name="ask_demo_dialog_title">No Device Found</string>
+    <string name="usb_permmsion_not_granted">Usb permmsion not granted.</string>
+</resources>

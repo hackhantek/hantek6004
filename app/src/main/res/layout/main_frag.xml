@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.hantek.ht6000api.HtScopeView
+        android:id="@+id/scopeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginStart="78dp"
+        android:layout_marginTop="24dp"
+        android:background="#FF292F30"
+        app:crossColor="#FFA1A39D"
+        app:largeColor="#FF555753"
+        app:smallColor="#FF313739"
+        app:xDivs="@integer/h_divs"
+        app:yDivs="@integer/v_divs"
+        app:xOffset="1"
+        app:yOffset="1"
+        app:sampleMin="@integer/sample_min"
+        app:sampleMax="@integer/sample_max"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</LinearLayout>

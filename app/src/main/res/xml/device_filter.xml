@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Hantek6074BE [VID:0x04B5/1205 PID:0x6CDE/27870] -->
+    <usb-device vendor-id="1205" product-id="27870" />
+</resources>

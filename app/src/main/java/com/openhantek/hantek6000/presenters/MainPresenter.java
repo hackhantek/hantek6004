@@ -20,12 +20,19 @@ public class MainPresenter implements MainContract.Presenter{
 
     //region USB
 
-    // check if specific USB device exist
-    //      exist：
-    //          check whether permission granted
-    //              granted：setDevice
-    //              not granted：ask permission
-    //      not exist：Ask if user need to load analog device
+    /**
+     * Check if specific USB device exist.
+     * <ul>
+     *     <li>exist：Check whether permission granted</li>
+     *     <ul>
+     *         <li>granted：setDevice</li>
+     *         <li>not granted：Request permission</li>
+     *     </ul>
+     *     <li>not exist: Ask if user need to load analog device</li>
+     * </ul>
+     * @param device_filter an xml file that specifies that any USB device with specified
+     *                      attributes should be filtered.
+     */
     @Override
     public void checkDeviceExist(int device_filter) {
         if (mHantekUsbManager.isScopeDeviceExist(device_filter)) {
@@ -83,7 +90,7 @@ public class MainPresenter implements MainContract.Presenter{
 
         @Override
         public void onScopeSettingsChanged() {
-
+            mMainView.updateUi();
         }
 
         @Override

@@ -84,6 +84,10 @@ public class MainFragment extends Fragment implements MainContract.View{
     }
 
     @Override
+    public void updateUi() {
+    }
+
+    @Override
     public void updateScopeView() {
         FragmentActivity activity = getActivity();
         if (activity == null) return;
@@ -91,7 +95,6 @@ public class MainFragment extends Fragment implements MainContract.View{
             @Override
             public void run() {
                 mScopeView.update();
-                mScopeView.invalidate();
             }
         });
     }
@@ -145,7 +148,9 @@ public class MainFragment extends Fragment implements MainContract.View{
         }
     };
 
-    // listen USB notification
+    /**
+     * Listen USB notification.
+     */
     private void setupUsbReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
@@ -153,6 +158,9 @@ public class MainFragment extends Fragment implements MainContract.View{
         mContext.registerReceiver(mUsbReceiver, filter);
     }
 
+    /**
+     * Handle USB permission notification.
+     */
     BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -166,7 +174,7 @@ public class MainFragment extends Fragment implements MainContract.View{
                     mPresenter.handleUsbPermissionGranted();
                 } else {
                     Toast.makeText(context,
-                            getResources().getString(R.string.usb_permmsion_not_granted),
+                            getResources().getString(R.string.usb_permission_not_granted),
                             Toast.LENGTH_SHORT).show();
                 }
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {

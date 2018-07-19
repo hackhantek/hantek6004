@@ -8,4 +8,10 @@
     <color name="colorChb">#FF0080D2</color>
     <color name="colorChc">#FFE33E7C</color>
     <color name="colorChd">#FF4CCD4F</color>
+
+    <!--status bar invalid color-->
+    <color name="status_bar_valid_color">#000000</color>
+    <color name="status_bar_invalid_color">#49494A</color>
+    <color name="status_bar_invalid_bk_color">#00000000</color>
+    <color name="status_bar_triggered_bk_color">#FFFF00</color>
 </resources>

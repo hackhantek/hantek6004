@@ -11,6 +11,9 @@ public interface MainContract {
 
         void askToLoadDemoDevice();
 
+        /**
+         * Called when need to update Scope View.
+         */
         void updateScopeView();
 
         boolean isAskDemoDialogShowing();
@@ -20,6 +23,8 @@ public interface MainContract {
         int[] getChannelColors();
 
         Object getScopeView();
+
+        void updateUi();
     }
 
     interface Presenter {

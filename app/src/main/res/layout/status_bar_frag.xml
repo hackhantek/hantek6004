@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--顶部状态栏布局-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#0A0B0B">
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorCha"
+        android:id="@+id/ch1ToggleButton" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorChb"
+        android:id="@+id/ch2ToggleButton" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorChc"
+        android:id="@+id/ch3ToggleButton" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorChd"
+        android:id="@+id/ch4ToggleButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/statusBarTimeBase"
+        android:textColor="#AAAAAA"
+        android:textSize="@dimen/statusBarTextSize"
+        android:gravity="center"
+        android:layout_marginStart="8dp"/>
+
+    <!--Add empty View to let element align to right-->
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:id="@+id/triggerStatusTextView"
+        android:textColor="#AAAAAA"
+        android:text="@string/trigger_status_title"
+        android:textSize="@dimen/statusBarTextSize"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/rounded_corner"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"/>
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/runButton"
+        android:textOn="@string/run_button_title"
+        android:textOff="@string/run_button_title" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/auto_button_title" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/menu_button_title" />
+
+</LinearLayout>

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--模拟通道数-->
-    <integer name="analog_ch_num">4</integer>
-    <!--纵向上几个大格-->
+    <!--vertical grid number-->
     <integer name="v_divs">8</integer>
-    <!--横向上几个大格-->
+    <!--horizontal grid number-->
     <integer name="h_divs">10</integer>
-    <!--最大采样值-->
+    <!--biggest sample value-->
     <integer name="sample_max">255</integer>
-    <!--最小采样值-->
+    <!--smallest sample value-->
     <integer name="sample_min">0</integer>
 </resources>

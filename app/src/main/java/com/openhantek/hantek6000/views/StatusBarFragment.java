@@ -1,5 +1,7 @@
 package com.openhantek.hantek6000.views;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -20,7 +23,10 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
     private ToggleButton[] mChToggleButtons = new ToggleButton[4];
     private TextView mTimeBase; // TimeBase text view.
     private ToggleButton mRunButton; // run button.
+    private Button mAutoButton; // auto button.
     private TextView mTriggerStatus; // trigger status text view;
+    private Context mContext;
+    private AlertDialog mAutosetDialog; // Autoset dialog.
 
     @Nullable
     @Override
@@ -32,6 +38,12 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         mPresenter = new StatusBarPresenter(this);
 
         return root;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     private void setupView(View rootView) {
@@ -55,8 +67,14 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         mTimeBase = rootView.findViewById(R.id.statusBarTimeBase);
 
         mRunButton = rootView.findViewById(R.id.runButton);
+        mRunButton.setOnClickListener(this);
 
         mTriggerStatus = rootView.findViewById(R.id.triggerStatusTextView);
+
+        rootView.findViewById(R.id.runButton).setOnClickListener(this);
+        mAutoButton = rootView.findViewById(R.id.autoButton);
+        mAutoButton.setOnClickListener(this);
+        rootView.findViewById(R.id.menuButton).setOnClickListener(this);
     }
 
     // Handle click event.
@@ -74,6 +92,12 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
                 break;
             case R.id.ch4ToggleButton:
                 mPresenter.switchChannel(3);
+                break;
+            case R.id.runButton:
+                mPresenter.switchRunStop();
+                break;
+            case R.id.autoButton:
+                mPresenter.handleAutoButtonClick();
                 break;
         }
     }
@@ -153,6 +177,30 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    public void showAutosetDialog() {
+        // 显示对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        mAutosetDialog = builder.setMessage(getResources().getString(R.string.autoset_wait)).create();
+        mAutosetDialog.setCancelable(false);
+        mAutosetDialog.show();
+    }
+
+    @Override
+    public void closeAutosetDialog() {
+        if (mAutosetDialog != null) {
+            mAutosetDialog.dismiss();
+            mAutosetDialog = null;
+        }
+    }
+
+    @Override
+    public void setRunButtonEnabled(boolean enabled) {
+        if (mAutoButton.isEnabled() != enabled) {
+            mAutoButton.setEnabled(enabled);
         }
     }
     //endregion

@@ -20,9 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.hantek.ht6000api.HtMarkerView;
+import com.hantek.ht6000api.HtMarkerViewListener;
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.models.HtUsbManager;
-import com.openhantek.hantek6000.presenters.MainContract;
 import com.openhantek.hantek6000.presenters.MainPresenter;
 
 import com.hantek.ht6000api.HtScopeView;
@@ -30,15 +31,20 @@ import com.hantek.ht6000api.HtScopeView;
 /**
  * Include ScopeView and zero level markers.
  */
-public class MainFragment extends Fragment implements MainContract.View{
+public class MainFragment extends Fragment implements MainPresenter.View{
 
     private final static String TAG = "MainFragment";
     private MainPresenter mPresenter;
     // Request USB permission ID
     private static final String ACTION_USB_PERMISSION = "com.openhantek.ht6000.USB_PERMISSION";
     private HtScopeView mScopeView;
-    private AlertDialog mAskDemoDialog; // Ask whether to load the demo device dialog.
+    // Ask whether to load the demo device dialog.
+    private AlertDialog mAskDemoDialog;
     private Context mContext;
+    // channel zero markers
+    private HtMarkerView[] mChLevers;
+    // Trigger Level Marker
+    private HtMarkerView mTriggerLevelMarker;
 
     @Nullable
     @Override
@@ -46,9 +52,10 @@ public class MainFragment extends Fragment implements MainContract.View{
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.main_frag, container, false);
 
-        mScopeView = root.findViewById(R.id.scopeView);
-
         mPresenter = new MainPresenter(this, new HtUsbManager(mContext));
+
+        setupUiElements(root);
+
         mPresenter.checkDeviceExist(R.xml.device_filter);
         setupUsbReceiver();
 
@@ -69,6 +76,90 @@ public class MainFragment extends Fragment implements MainContract.View{
         super.onDestroy();
     }
 
+    //region Helper methods
+    // setup UI elements
+    private void setupUiElements(View root) {
+        mChLevers = new HtMarkerView[mPresenter.getAnalogChannelCount()];
+
+        mChLevers[0] = root.findViewById(R.id.ch1LevelMarker);
+        mChLevers[1] = root.findViewById(R.id.ch2LevelMarker);
+        mChLevers[2] = root.findViewById(R.id.ch3LevelMarker);
+        mChLevers[3] = root.findViewById(R.id.ch4LevelMarker);
+
+        mTriggerLevelMarker = root.findViewById(R.id.triggerLevelMarker);
+
+        mScopeView = root.findViewById(R.id.scopeView);
+        // Reset the range of levers after scope view position changed.
+        mScopeView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                updateLeversRange();
+            }
+        });
+
+        // Set channel zero level marker event listener
+        for (HtMarkerView marker: mChLevers) {
+            marker.setListener(markerViewListener);
+        }
+        mTriggerLevelMarker.setListener(markerViewListener);
+    }
+
+    // marker event listener.
+    private HtMarkerViewListener markerViewListener = new HtMarkerViewListener() {
+        @Override
+        public void onMarkerDragEnded(View view, int position) {
+            switch (view.getId()) {
+                case R.id.ch1LevelMarker:
+                    mPresenter.handleChZeroMarkerDragEnded(0, position);
+                    break;
+                case R.id.ch2LevelMarker:
+                    mPresenter.handleChZeroMarkerDragEnded(1, position);
+                    break;
+                case R.id.ch3LevelMarker:
+                    mPresenter.handleChZeroMarkerDragEnded(2, position);
+                    break;
+                case R.id.ch4LevelMarker:
+                    mPresenter.handleChZeroMarkerDragEnded(3, position);
+                    break;
+                case R.id.triggerLevelMarker:
+                    mPresenter.changeTriggerLevelPos(position);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMarkerLongTouched(View view) {
+
+        }
+
+        @Override
+        public void onMarkerDoubleClicked(View view) {
+
+        }
+    };
+
+    // Set the range of the levers movement and converted range.
+    private void updateLeversRange() {
+        float minRange = mScopeView.getTop();
+        float maxRange = mScopeView.getBottom();
+        // the most big sample vale is on top of scope view.
+        int minRangeValue = getResources().getInteger(R.integer.sample_max);
+        // the converted vale when marker moved to bottom
+        int maxRangeValue = getResources().getInteger(R.integer.sample_min);
+
+        for (HtMarkerView marker: mChLevers) {
+            marker.setRange(minRange, maxRange);
+            marker.setConvertRange(minRangeValue, maxRangeValue);
+        }
+
+        mTriggerLevelMarker.setRange(minRange, maxRange);
+        mTriggerLevelMarker.setConvertRange(minRangeValue, maxRangeValue);
+    }
+    //endregion
+
+    //region MVP view methods
+
     @Override
     public int[] getChannelColors() {
         return new int[]{
@@ -84,7 +175,55 @@ public class MainFragment extends Fragment implements MainContract.View{
     }
 
     @Override
-    public void updateUi() {
+    public void updateZeroLevelPos(final int i, final int zeroLevelPos) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mChLevers[i].setPosition(zeroLevelPos);
+            }
+        });
+    }
+
+    @Override
+    public void updateChZeroLevelMarkerVisibility(final boolean channelEnabled, final int i) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if ((mChLevers[i].getVisibility() != View.VISIBLE) && channelEnabled) {
+                    mChLevers[i].setVisibility(View.VISIBLE);
+                } else if (mChLevers[i].getVisibility() != View.INVISIBLE && !channelEnabled) {
+                    mChLevers[i].setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void updateTriggerLevelPos(final int triggerLevelPos) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTriggerLevelMarker.setPosition(triggerLevelPos);
+            }
+        });
+    }
+
+    @Override
+    public void updateTriggerLevelVisibility(final boolean visible) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if ((mTriggerLevelMarker.getVisibility() != View.VISIBLE) && visible) {
+                    mTriggerLevelMarker.setVisibility(View.VISIBLE);
+                } else if (mTriggerLevelMarker.getVisibility() != View.INVISIBLE && !visible) {
+                    mTriggerLevelMarker.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -126,10 +265,9 @@ public class MainFragment extends Fragment implements MainContract.View{
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         mAskDemoDialog = builder.setTitle(R.string.ask_demo_dialog_title)
                 .setMessage(R.string.ask_demo_dialog_message)
-                .setPositiveButton(R.string.alert_dialog_yes, demoDialogClickListener)
-                .setNegativeButton(R.string.alert_dialog_no, demoDialogClickListener)
-                //.setIcon(R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.alert_dialog_ok, demoDialogClickListener)
                 .create();
+        mAskDemoDialog.setCancelable(false);
         mAskDemoDialog.show();
     }
 
@@ -141,12 +279,10 @@ public class MainFragment extends Fragment implements MainContract.View{
                 case DialogInterface.BUTTON_POSITIVE:   // Yes button clicked, load
                     mPresenter.loadDemoDevice(getChannelColors(), mScopeView);
                     break;
-                case DialogInterface.BUTTON_NEGATIVE:   // No button clicked, don't load
-                    mPresenter.handleNotLoadDemoDevice();
-                    break;
             }
         }
     };
+    //endregion
 
     /**
      * Listen USB notification.

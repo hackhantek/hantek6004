@@ -1,10 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!--The main view layout. It include zero level markers and waveform view.-->
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--htMarkerType: arrow direction-->
+    <!--htMarkerColor: marker color-->
+    <!--htMarkerRatio: the ratio of the length or height of the rectangle to the height of the triangle-->
+    <!--htMarkerTitle：marker title-->
+    <!--CH1 zero level marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/ch1LevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorCha"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="1" />
+
+    <!--CH2 zero level position marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/ch2LevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorChb"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="2" />
+
+    <!--CH3 zero level position marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/ch3LevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorChc"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="3" />
+
+    <!--CH4 zero level position marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/ch4LevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorChd"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="4" />
+
+    <!--Waveform view-->
     <com.hantek.ht6000api.HtScopeView
         android:id="@+id/scopeView"
         android:layout_width="match_parent"
@@ -28,4 +83,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+    <!--Trigger Level Marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/triggerLevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        app:htMarkerColor="@color/colorCha"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeLeft"
+        app:htMarkerTitle="T"
+        app:layout_constraintStart_toEndOf="@id/scopeView" />
+
+</android.support.constraint.ConstraintLayout>

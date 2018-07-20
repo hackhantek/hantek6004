@@ -4,9 +4,10 @@
     <!--Common Dialog-->
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
+    <string name="alert_dialog_ok">OK</string>
 
     <!--Ask Demo Dialog: ask if user want to load demo device-->
-    <string name="ask_demo_dialog_message">No suitable device found.\nWould you like to use a demo device?</string>
+    <string name="ask_demo_dialog_message">No suitable device found. Will running in demo mode.</string>
     <string name="ask_demo_dialog_title">No Device Found</string>
     <string name="usb_permission_not_granted">Usb permmsion not granted.</string>
 
@@ -15,4 +16,7 @@
     <string name="auto_button_title">AUTO</string>
     <string name="menu_button_title">MENU</string>
     <string name="trigger_status_title">T</string>
+
+    <!--Autoset dialog-->
+    <string name="autoset_wait">Autoset is in progress, please wait.</string>
 </resources>

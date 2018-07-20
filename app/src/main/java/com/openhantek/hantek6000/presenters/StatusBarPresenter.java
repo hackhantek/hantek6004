@@ -33,6 +33,10 @@ public class StatusBarPresenter  {
             // sync run button status
             mView.updateRunButton(mDataSource.isRunning());
         }
+
+        // user can't press AUTO button when scope device is not connected.
+        // In the future will support autoset in demo mode, so this is no needed.
+        mView.setRunButtonEnabled(mDataSource.isInRealMode());
     }
 
     // Hantek device listener
@@ -55,7 +59,9 @@ public class StatusBarPresenter  {
         public void onSelfCaliEnded() {}
 
         @Override
-        public void onAutosetEnded() {}
+        public void onAutosetEnded() {
+            mView.closeAutosetDialog();
+        }
 
         @Override
         public void updateFreqCounterMeter(int freqResult, int counterResult) {}
@@ -67,6 +73,32 @@ public class StatusBarPresenter  {
      */
     public void switchChannel(int i) {
         mDataSource.switchChannelEnabled(i);
+    }
+
+    /**
+     * Switch scope RUN&STOP status.
+     */
+    public void switchRunStop() {
+        mDataSource.switchRunStop();
+    }
+
+    /**
+     * Start autoset.
+     */
+    public void startAutoset() {
+        mDataSource.startAutoset();
+    }
+
+    /**
+     * Handle AUTO button click event.
+     * <p>Will ask the user if he/she want to autoset.</p>
+     */
+    public void handleAutoButtonClick() {
+        if (mDataSource.isSelfCalibrating()) return;
+
+        mDataSource.startAutoset();
+
+        mView.showAutosetDialog();
     }
 
     public interface View {
@@ -102,5 +134,21 @@ public class StatusBarPresenter  {
          * @param triggered true: triggered; false: no triggered.
          */
         void updateTriggerStatus(final boolean triggered);
+
+        /**
+         * Show a dialog, so user can't do any operation when auto setting.
+         */
+        void showAutosetDialog();
+
+        /**
+         * Hide autoset dialog.
+         */
+        void closeAutosetDialog();
+
+        /**
+         * Set autoset button enabled status
+         * @param enabled in real mode
+         */
+        void setRunButtonEnabled(boolean enabled);
     }
 }

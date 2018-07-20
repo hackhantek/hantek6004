@@ -70,12 +70,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/autoButton"
         android:textStyle="bold"
         android:text="@string/auto_button_title" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/menuButton"
         android:textStyle="bold"
         android:text="@string/menu_button_title" />
 

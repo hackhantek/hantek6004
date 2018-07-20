@@ -13,7 +13,7 @@ public class MainRepository implements MainDataSource{
 
     @Override
     public int getAnalogChannelCount() {
-        return HantekSdk.getDevice().getChannels().length;
+        return HantekSdk.getAnlogChannelsCount();
     }
 
     @Override
@@ -49,5 +49,51 @@ public class MainRepository implements MainDataSource{
     @Override
     public void switchChannelEnabled(int i) {
         HantekSdk.switchChannelEnabled(i);
+    }
+
+    @Override
+    public void switchRunStop() {
+        HantekSdk.switchRunStop();
+    }
+
+    @Override
+    public void startAutoset() {
+        HantekSdk.startAutoset();
+    }
+
+    @Override
+    public boolean isDisconnected() {
+        return HantekSdk.isDisConnected();
+    }
+
+    @Override
+    public boolean isSelfCalibrating() {
+        return HantekSdk.isSelfCalibrating();
+    }
+
+    @Override
+    public boolean isInRealMode() {
+        return HantekSdk.isInRealMode();
+    }
+
+    @Override
+    public int getChannelPos(int chIndex) {
+        if (HantekSdk.getDevice() == null) return -1;
+        return HantekSdk.getDevice().getChannels()[chIndex].getLevel();
+    }
+
+    @Override
+    public void setChannelPos(int i, int position) {
+        HantekSdk.setChannelPos(i, position);
+    }
+
+    @Override
+    public int getTriggerLevelPos() {
+        return HantekSdk.getTriggerLevel();
+    }
+
+    @Override
+    public void setTriggerLevelPos(int position) {
+        HantekSdk.setTriggerLevel(position);
     }
 }

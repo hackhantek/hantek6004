@@ -55,4 +55,58 @@ public interface MainDataSource {
      * @param i channel index. 0: CH1
      */
     void switchChannelEnabled(int i);
+
+    /**
+     * Switch scope RUN&STOP status.
+     */
+    void switchRunStop();
+
+    /**
+     * Start autoset.
+     */
+    void startAutoset();
+
+    /**
+     * Is in Disconnected status.
+     * @return true: in disconnected status.
+     */
+    boolean isDisconnected();
+
+    /**
+     * Is self calibrating.
+     * @return true: self calibrating.
+     */
+    boolean isSelfCalibrating();
+
+    /**
+     * Is in real mode.
+     * @return true: in demo mode
+     */
+    boolean isInRealMode();
+
+    /**
+     * Get channel zero level position
+     * @param chIndex channel index. 0:CH1...
+     * @return current zero level position.
+     */
+    int getChannelPos(int chIndex);
+
+    /**
+     * Set channel zero level position.
+     * @param i channel index. 0: CH1...
+     * @param position new position.
+     */
+    void setChannelPos(int i, int position);
+
+    /**
+     * Get trigger level.
+     * @return trigger level.
+     */
+    int getTriggerLevelPos();
+
+    /**
+     * Set trigger level position.
+     * @param position trigger level position.
+     */
+    void setTriggerLevelPos(int position);
 }

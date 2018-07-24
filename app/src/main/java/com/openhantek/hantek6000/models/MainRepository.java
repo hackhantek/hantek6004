@@ -2,6 +2,9 @@ package com.openhantek.hantek6000.models;
 
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.HantekSdk;
+import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.InputCoupling;
+import com.hantek.ht6000api.ht6000.TriggerSlope;
 
 public class MainRepository implements MainDataSource{
 
@@ -95,5 +98,55 @@ public class MainRepository implements MainDataSource{
     @Override
     public void setTriggerLevelPos(int position) {
         HantekSdk.setTriggerLevel(position);
+    }
+
+    @Override
+    public void setCoupling(int chIndex, InputCoupling inputCoupling) {
+        HantekSdk.setCoupling(chIndex, inputCoupling);
+    }
+
+    @Override
+    public InputCoupling getCoupling(int chIndex) {
+        return HantekSdk.getCoupling(chIndex);
+    }
+
+    @Override
+    public AttenuationFactor getAttenuationFactor(int chIndex) {
+        return HantekSdk.getAttenuationFactor(chIndex);
+    }
+
+    @Override
+    public void setAttenuationFacotr(int chIndex, AttenuationFactor attenuationFactor) {
+        HantekSdk.setAttenuationFacotr(chIndex, attenuationFactor);
+    }
+
+    @Override
+    public void setTriggerSource(int source) {
+        HantekSdk.setTriggerSource(source);
+    }
+
+    @Override
+    public void setTriggerSlope(TriggerSlope slope) {
+        HantekSdk.setTriggerSlope(slope);
+    }
+
+    @Override
+    public int getTriggerSource() {
+        return HantekSdk.getTriggerSource();
+    }
+
+    @Override
+    public TriggerSlope getTriggerSlope() {
+        return HantekSdk.getTriggerSlope();
+    }
+
+    @Override
+    public void centerChannelLevel(int chIndex) {
+        HantekSdk.centerChannelLevel(chIndex);
+    }
+
+    @Override
+    public void centerTriggerLevel() {
+        HantekSdk.centerTriggerLevel();
     }
 }

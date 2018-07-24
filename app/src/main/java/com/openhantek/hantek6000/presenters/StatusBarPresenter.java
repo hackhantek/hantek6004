@@ -22,8 +22,8 @@ public class StatusBarPresenter  {
             // sync channel enabled status.
             mView.updateChannelEnabledUi(mDataSource.isChannelEnabled(i), i);
 
-            // sync volts per div
-            String prefix = "CH" + i + " ";
+            // sync volts per div. +1: CH1
+            String prefix = "CH" + (i+1) + " ";
             mView.updateChannelVoltsDiv(prefix + mDataSource.getVoltsDivString(i), i);
 
             // sync time base

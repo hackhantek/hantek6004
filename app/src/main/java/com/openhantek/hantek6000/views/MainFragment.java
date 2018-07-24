@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.hantek.ht6000api.HtMarkerView;
 import com.hantek.ht6000api.HtMarkerViewListener;
+import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.InputCoupling;
+import com.hantek.ht6000api.ht6000.TriggerSlope;
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.models.HtUsbManager;
 import com.openhantek.hantek6000.presenters.MainPresenter;
@@ -45,6 +48,8 @@ public class MainFragment extends Fragment implements MainPresenter.View{
     private HtMarkerView[] mChLevers;
     // Trigger Level Marker
     private HtMarkerView mTriggerLevelMarker;
+    private ChQuickSettingsPop mChQuickSettingsPop; // channel quick settings popup window handler.
+    private TriggerQuickSettingsPop mTriggerSettingsPop; // trigger quick setttings popup window handler.
 
     @Nullable
     @Override
@@ -105,10 +110,108 @@ public class MainFragment extends Fragment implements MainPresenter.View{
         mTriggerLevelMarker.setListener(markerViewListener);
     }
 
+    // Channel quick settings popup window message listener.
+    private ChQuickSettingsPop.ChQuickSettingsListener mChQuickSettingsListener =
+            new ChQuickSettingsPop.ChQuickSettingsListener() {
+                @Override
+                public void onCouplingChanged(int chIndex, InputCoupling inputCoupling) {
+                    mPresenter.setCoupling(chIndex, inputCoupling);
+                }
+
+                @Override
+                public void onAttenuationFactor(int chIndex, AttenuationFactor attenuationFactor) {
+                    mPresenter.setAttenuationFactor(chIndex, attenuationFactor);
+                }
+            };
+
+    // Trigger quick settings PopupWindow message listener.
+    private TriggerQuickSettingsPop.TriggerQuickSettingsPopListener mTriggerSettingsPopListener =
+            new TriggerQuickSettingsPop.TriggerQuickSettingsPopListener() {
+                @Override
+                public void onSourceChanged(int source) {
+                    mPresenter.setTriggerSource(source);
+                }
+
+                @Override
+                public void onSlopeChanged(TriggerSlope slope) {
+                    mPresenter.setTriggerSlope(slope);
+                }
+            };
+
     // marker event listener.
     private HtMarkerViewListener markerViewListener = new HtMarkerViewListener() {
+
+        // single tap event
+        @Override
+        public void onMarkerSingleTapped(View view) {
+
+            int chIndex = 0;
+            boolean isChSettings = true;
+
+            switch (view.getId()) {
+                case R.id.ch1LevelMarker:
+                    chIndex = 0;
+                    break;
+                case R.id.ch2LevelMarker:
+                    chIndex = 1;
+                    break;
+                case R.id.ch3LevelMarker:
+                    chIndex = 2;
+                    break;
+                case R.id.ch4LevelMarker:
+                    chIndex = 3;
+                    break;
+                case R.id.triggerLevelMarker:
+                    isChSettings = false;
+                    break;
+            }
+
+            // popup window according to button clicked
+            if (isChSettings) {
+                if (mChQuickSettingsPop!=null && mChQuickSettingsPop.isShowing()) return;
+
+                mChQuickSettingsPop = new ChQuickSettingsPop(view, mContext, chIndex,
+                        mPresenter.getCoupling(chIndex), mPresenter.getAttenuationFactor(chIndex));
+                mChQuickSettingsPop.show();
+                mChQuickSettingsPop.setListener(mChQuickSettingsListener);
+            } else {
+                mTriggerSettingsPop = new TriggerQuickSettingsPop(view, mContext,
+                        mPresenter.getTriggerSource(),
+                        mPresenter.getTriggerSlope());
+                mTriggerSettingsPop.show();
+                mTriggerSettingsPop.setListener(mTriggerSettingsPopListener);
+            }
+        }
+
+        // double tap event
+        @Override
+        public void onMarkerDoubleTapped(View view) {
+            switch (view.getId()){
+                case R.id.ch1LevelMarker:
+                    mPresenter.centerChannelLevel(0);
+                    break;
+                case R.id.ch2LevelMarker:
+                    mPresenter.centerChannelLevel(1);
+                    break;
+                case R.id.ch3LevelMarker:
+                    mPresenter.centerChannelLevel(2);
+                    break;
+                case R.id.ch4LevelMarker:
+                    mPresenter.centerChannelLevel(3);
+                    break;
+            }
+
+            switch (view.getId()) {
+                case R.id.triggerLevelMarker:
+                    mPresenter.centerTriggerLevel();
+                    break;
+            }
+        }
+
+        // drag ended
         @Override
         public void onMarkerDragEnded(View view, int position) {
+            System.out.println("MainFragment:" + "DragEnded event received." + position);
             switch (view.getId()) {
                 case R.id.ch1LevelMarker:
                     mPresenter.handleChZeroMarkerDragEnded(0, position);
@@ -126,16 +229,6 @@ public class MainFragment extends Fragment implements MainPresenter.View{
                     mPresenter.changeTriggerLevelPos(position);
                     break;
             }
-        }
-
-        @Override
-        public void onMarkerLongTouched(View view) {
-
-        }
-
-        @Override
-        public void onMarkerDoubleClicked(View view) {
-
         }
     };
 
@@ -224,6 +317,36 @@ public class MainFragment extends Fragment implements MainPresenter.View{
                 }
             }
         });
+    }
+
+    @Override
+    public void updateTriggerLevelColor(int triggerSource) {
+
+        int color = -1;
+        switch (triggerSource){
+            case 0:
+                color = getResources().getColor(R.color.colorCha);
+                break;
+            case 1:
+                color = getResources().getColor(R.color.colorChb);
+                break;
+            case 2:
+                color = getResources().getColor(R.color.colorChc);
+                break;
+            case 3:
+                color = getResources().getColor(R.color.colorChd);
+                break;
+        }
+
+        if (-1 != color && getActivity() != null) {
+            final int finalColor = color;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTriggerLevelMarker.setMarkerColor(finalColor);
+                }
+            });
+        }
     }
 
     @Override

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--channel quick settings PopupWindow-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/colorPopup">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ch_settings_coupling_button"
+        android:text="AC" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ch_settings_probe_button"
+        android:text="X1" />
+
+</LinearLayout>

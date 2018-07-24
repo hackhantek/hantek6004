@@ -3,6 +3,9 @@ package com.openhantek.hantek6000.models;
 // This class can't depend on OS specific framework or class, but can depend on pure java class.
 
 import com.hantek.ht6000api.HantekDeviceListener;
+import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.InputCoupling;
+import com.hantek.ht6000api.ht6000.TriggerSlope;
 
 public interface MainDataSource {
     /**
@@ -109,4 +112,67 @@ public interface MainDataSource {
      * @param position trigger level position.
      */
     void setTriggerLevelPos(int position);
+
+    /**
+     * Set channel input coupling.
+     * @param chIndex channel index.
+     * @param inputCoupling input coupling
+     */
+    void setCoupling(int chIndex, InputCoupling inputCoupling);
+
+    /**
+     * Get channel input coupling.
+     * @param chIndex channel index
+     * @return channel input coupling
+     */
+    InputCoupling getCoupling(int chIndex);
+
+    /**
+     * Get channel attenuation factor.
+     * @param chIndex channel index.
+     * @return attenuation factor.
+     */
+    AttenuationFactor getAttenuationFactor(int chIndex);
+
+    /**
+     * Set attenuation factor.
+     * @param chIndex channel index.
+     * @param attenuationFactor attenuation factor.
+     */
+    void setAttenuationFacotr(int chIndex, AttenuationFactor attenuationFactor);
+
+    /**
+     * Set trigger source.
+     * @param source new trigger source
+     */
+    void setTriggerSource(int source);
+
+    /**
+     * Set trigger slope.
+     * @param slope new trigger slope.
+     */
+    void setTriggerSlope(TriggerSlope slope);
+
+    /**
+     * Get trigger source
+     * @return trigger source. 0:CH1...
+     */
+    int getTriggerSource();
+
+    /**
+     * Get trigger slope.
+     * @return current trigger slope.
+     */
+    TriggerSlope getTriggerSlope();
+
+    /**
+     * Put channel zero level in center.
+     * @param chIndex channel index. 0:CH1...
+     */
+    void centerChannelLevel(int chIndex);
+
+    /**
+     * Put trigger level in center of trigger source channel waveform.
+     */
+    void centerTriggerLevel();
 }

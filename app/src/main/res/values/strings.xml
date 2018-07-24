@@ -9,14 +9,45 @@
     <!--Ask Demo Dialog: ask if user want to load demo device-->
     <string name="ask_demo_dialog_message">No suitable device found. Will running in demo mode.</string>
     <string name="ask_demo_dialog_title">No Device Found</string>
-    <string name="usb_permission_not_granted">Usb permmsion not granted.</string>
+    <string name="usb_permission_not_granted">Usb permission not granted.</string>
 
     <!--StatusBar-->
     <string name="run_button_title">RUN</string>
     <string name="auto_button_title">AUTO</string>
     <string name="menu_button_title">MENU</string>
+    <!--Note: Don't trigger_status_title-->
     <string name="trigger_status_title">T</string>
 
     <!--Autoset dialog-->
     <string name="autoset_wait">Autoset is in progress, please wait.</string>
+
+    <!--Coupling-->
+    <string name="coupling_ac">AC</string>
+    <string name="coupling_dc">DC</string>
+    <string name="coupling_gnd">GND</string>
+
+    <!--Attenuation Factor-->
+    <!--Note: Don't translate Attenuation Factor-->
+    <string name="probe_x1">X1</string>
+    <string name="probe_x10">X10</string>
+    <string name="probe_x100">X100</string>
+    <string name="probe_x1000">X1000</string>
+    <string name="probe_x10000">X10000</string>
+    <string name="probe_x20">X20</string>
+    <string name="probe_x10a_cc65">X10A_CC65</string>
+    <string name="probe_x100a_cc65">X100A_CC65</string>
+    <string name="probe_x100a_cc650">X100A_CC650</string>
+    <string name="probe_x1000a_cc650">X1000A_CC650</string>
+    <string name="probe_100a_cc1100">X100A_CC1100</string>
+    <string name="probe_1000a_cc1100">X1000A_CC1100</string>
+
+    <!--Analog channels-->
+    <string name="ch1">CH1</string>
+    <string name="ch2">CH2</string>
+    <string name="ch3">CH3</string>
+    <string name="ch4">CH4</string>
+
+    <!--trigger slope-->
+    <string name="trigger_slope_rising">Rising</string>
+    <string name="trigger_slope_falling">Falling</string>
 </resources>

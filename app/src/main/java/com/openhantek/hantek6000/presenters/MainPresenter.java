@@ -1,6 +1,9 @@
 package com.openhantek.hantek6000.presenters;
 
 import com.hantek.ht6000api.HantekDeviceListener;
+import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.InputCoupling;
+import com.hantek.ht6000api.ht6000.TriggerSlope;
 import com.openhantek.hantek6000.models.HtUsbManagerInterface;
 import com.openhantek.hantek6000.models.MainDataSource;
 import com.openhantek.hantek6000.models.MainRepository;
@@ -79,6 +82,9 @@ public class MainPresenter {
         // sync trigger level marker
         mView.updateTriggerLevelPos(mDataSource.getTriggerLevelPos());
         mView.updateTriggerLevelVisibility(true);
+
+        // trigger marker color
+        mView.updateTriggerLevelColor(mDataSource.getTriggerSource());
     }
     //endregion Helper methods
 
@@ -151,6 +157,89 @@ public class MainPresenter {
         mDataSource.setTriggerLevelPos(position);
     }
 
+    /**
+     * Set channel input coupling.
+     * @param chIndex channel index.
+     * @param inputCoupling input coupling
+     */
+    public void setCoupling(int chIndex, InputCoupling inputCoupling) {
+        mDataSource.setCoupling(chIndex, inputCoupling);
+    }
+
+    /**
+     * Get channel input coupling.
+     * @param chIndex channel index
+     * @return channel input coupling
+     */
+    public InputCoupling getCoupling(int chIndex) {
+        return mDataSource.getCoupling(chIndex);
+    }
+
+    /**
+     * Get channel attenuation factor.
+     * @param chIndex channel index.
+     * @return attenuation factor.
+     */
+    public AttenuationFactor getAttenuationFactor(int chIndex) {
+        return mDataSource.getAttenuationFactor(chIndex);
+    }
+
+    /**
+     * Set attenuation factor.
+     * @param chIndex channel index.
+     * @param attenuationFactor attenuation factor.
+     */
+    public void setAttenuationFactor(int chIndex, AttenuationFactor attenuationFactor) {
+        mDataSource.setAttenuationFacotr(chIndex, attenuationFactor);
+    }
+
+    /**
+     * Set trigger source.
+     * @param source new trigger source
+     */
+    public void setTriggerSource(int source) {
+        mDataSource.setTriggerSource(source);
+    }
+
+    /**
+     * Set trigger slope.
+     * @param slope new trigger slope.
+     */
+    public void setTriggerSlope(TriggerSlope slope) {
+        mDataSource.setTriggerSlope(slope);
+    }
+
+    /**
+     * Get trigger source.
+     * @return trigger source. 0:CH1...
+     */
+    public int getTriggerSource() {
+        return mDataSource.getTriggerSource();
+    }
+
+    /**
+     * Get trigger slope.
+     * @return current trigger slope.
+     */
+    public TriggerSlope getTriggerSlope() {
+        return mDataSource.getTriggerSlope();
+    }
+
+    /**
+     * Put channel zero level in center.
+     * @param chIndex channel index 0: CH1
+     */
+    public void centerChannelLevel(int chIndex) {
+        mDataSource.centerChannelLevel(chIndex);
+    }
+
+    /**
+     * Put trigger level in center of trigger source channel waveform.
+     */
+    public void centerTriggerLevel() {
+        mDataSource.centerTriggerLevel();
+    }
+
     //endregion Presenter Method
 
     public interface View {
@@ -189,5 +278,7 @@ public class MainPresenter {
         void updateTriggerLevelPos(int triggerLevelPos);
 
         void updateTriggerLevelVisibility(boolean visible);
+
+        void updateTriggerLevelColor(int triggerSource);
     }
 }

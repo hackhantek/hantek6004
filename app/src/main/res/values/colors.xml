@@ -14,4 +14,7 @@
     <color name="status_bar_invalid_color">#49494A</color>
     <color name="status_bar_invalid_bk_color">#00000000</color>
     <color name="status_bar_triggered_bk_color">#FFFF00</color>
+
+    <!--PopupWindow Background-->
+    <color name="colorPopup">#494F50</color>
 </resources>

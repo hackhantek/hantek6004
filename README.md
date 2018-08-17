@@ -16,17 +16,3 @@ The bellow devices has not been tested, but I think it is also supported.
 ![hantek6000-screenshot](hantek6000-screenshot.png)
 
 
-
-## Todo
-
-1. draw coupling indicator on channel zero level marker
-2. voltage adjust by gesture
-3. adjust by gesture
-   1. gesutre
-   2. dropdown list
-4. automeasure
-5. atuoset
-6. cusormeasure
-7. menu
-8. factorysetup
-9. self calibration

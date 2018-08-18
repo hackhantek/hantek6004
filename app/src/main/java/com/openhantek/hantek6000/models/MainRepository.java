@@ -149,4 +149,9 @@ public class MainRepository implements MainDataSource{
     public void centerTriggerLevel() {
         HantekSdk.centerTriggerLevel();
     }
+
+    @Override
+    public InputCoupling getChInputCoupling(int chIndex) {
+        return HantekSdk.getCoupling(chIndex);
+    }
 }

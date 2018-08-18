@@ -77,6 +77,8 @@ public class MainPresenter {
             mView.updateZeroLevelPos(i, mDataSource.getChannelPos(i));
             // sync channel marker visible with channel enabled status
             mView.updateChZeroLevelMarkerVisibility(mDataSource.isChannelEnabled(i), i);
+            // update coupling in zero level marker
+            mView.updateChCouplingIndicator(i, mDataSource.getChInputCoupling(i));
         }
 
         // sync trigger level marker
@@ -280,5 +282,12 @@ public class MainPresenter {
         void updateTriggerLevelVisibility(boolean visible);
 
         void updateTriggerLevelColor(int triggerSource);
+
+        /**
+         * Update channel input coupling in zero level marker.
+         * @param chIndex channel index. 0:CH1
+         * @param inputCoupling input coupling
+         */
+        void updateChCouplingIndicator(int chIndex, InputCoupling inputCoupling);
     }
 }

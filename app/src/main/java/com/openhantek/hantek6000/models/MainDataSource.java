@@ -175,4 +175,11 @@ public interface MainDataSource {
      * Put trigger level in center of trigger source channel waveform.
      */
     void centerTriggerLevel();
+
+    /**
+     * Get channel input coupling
+     * @param chIndex 0:CH1...3：CH4
+     * @return channel input cooupling
+     */
+    InputCoupling getChInputCoupling(int chIndex);
 }

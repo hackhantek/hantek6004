@@ -294,6 +294,18 @@ public class MainFragment extends Fragment implements MainPresenter.View{
     }
 
     @Override
+    public void updateChCouplingIndicator(final int chIndex, final InputCoupling inputCoupling) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+               mChLevers[chIndex].setInputCoupling(inputCoupling);
+               mChLevers[chIndex].invalidate();
+            }
+        });
+    }
+
+    @Override
     public void updateTriggerLevelPos(final int triggerLevelPos) {
         if (getActivity() == null) return;
         getActivity().runOnUiThread(new Runnable() {

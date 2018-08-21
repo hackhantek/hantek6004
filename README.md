@@ -15,7 +15,7 @@ The Hantek60x4 device have no official Android APP. This is a reverse engineered
 
 ![hantek6000-screenshot](hantek6000-screenshot.png)
 
-![OTG-connect](otg_connect.png)
+![OTG-connect](otg_connect.PNG)
 
 ## Features
 

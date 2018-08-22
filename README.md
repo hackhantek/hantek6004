@@ -22,6 +22,10 @@ The Hantek60x4 device have no official Android APP. This is a reverse engineered
 - Touch friendly operation
 - Operate the oscilloscope intuitively
 
+## Download
+
+Download the latest release from [release page](https://github.com/hackhantek/hantek6004/releases).
+
 ## Todo
 
 1. ~~Open/Close channel~~

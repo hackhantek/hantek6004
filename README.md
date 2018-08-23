@@ -21,6 +21,7 @@ The Hantek60x4 device have no official Android APP. This is a reverse engineered
 
 - Touch friendly operation
 - Operate the oscilloscope intuitively
+- Adjust volts/div and time/div by pinch gesture
 
 ## Download
 
@@ -37,16 +38,17 @@ Download the latest release from [release page](https://github.com/hackhantek/ha
 7. ~~Draw coupling indicator on channel zero level marker~~
 8. ~~Atuoset~~
 9. Voltage adjust by gesture
-10. Timebase adjust by gesture
+10. Add trigger sweep settings in trigger quick settings
+11. Timebase adjust by gesture
     1. gesutre
     2. dropdown list
-11. change channel zero level by drag channel wave
-12. dropdown list
-11. Automeasure
-12. Cusor Measure
-13. Menu
-14. Factorysetup
-15. Self calibration
+12. change channel zero level by drag channel wave
+13. dropdown list
+14. Automeasure
+15. Cusor Measure
+16. Menu
+17. Factorysetup
+18. Self calibration
 
 ## Other
 

@@ -89,6 +89,24 @@ public class HtUsbManager implements HtUsbManagerInterface {
     }
 
     @Override
+    public void releaseDevice() {
+
+        if (mUsbConnection != null) {
+            if (mInterface != null) {
+                mUsbConnection.releaseInterface(mInterface);
+                mInterface = null;
+            }
+            mUsbConnection.close();
+            mUsbDevice = null;
+            mUsbConnection = null;
+        }
+
+        if (HantekSdk.getDevice() != null) {
+            HantekSdk.getDevice().close();
+        }
+    }
+
+    @Override
     public boolean isScopeDeviceExist(int device_filter) {
         for (UsbDevice device: mUsbManager.getDeviceList().values()) {
             if (isHantekDevice(device, context, device_filter)) {

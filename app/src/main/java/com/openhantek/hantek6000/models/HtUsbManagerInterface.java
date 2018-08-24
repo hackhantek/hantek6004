@@ -16,4 +16,6 @@ public interface HtUsbManagerInterface {
     boolean hasUsbPermission();
 
     Object getUsbDevice();
+
+    void releaseDevice();
 }

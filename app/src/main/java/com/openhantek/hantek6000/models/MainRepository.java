@@ -154,4 +154,16 @@ public class MainRepository implements MainDataSource{
     public InputCoupling getChInputCoupling(int chIndex) {
         return HantekSdk.getCoupling(chIndex);
     }
+
+    @Override
+    public void increaseVoltsPerDiv() {
+
+        HantekSdk.increaseVoltsPerDiv();
+    }
+
+    @Override
+    public void decreaseVoltsPerDiv() {
+
+        HantekSdk.decreaseVoltsPerDiv();
+    }
 }

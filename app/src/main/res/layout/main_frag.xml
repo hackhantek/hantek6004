@@ -61,6 +61,7 @@
         app:htMarkerTitle="4" />
 
     <!--Waveform view-->
+    <!--drawSelectedChBk：whether to draw selected channel background-->
     <com.hantek.ht6000api.HtScopeView
         android:id="@+id/scopeView"
         android:layout_width="match_parent"
@@ -79,10 +80,11 @@
         app:yOffset="1"
         app:sampleMin="@integer/sample_min"
         app:sampleMax="@integer/sample_max"
+        app:drawSelectedChBk="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <!--Trigger Level Marker-->
     <com.hantek.ht6000api.HtMarkerView

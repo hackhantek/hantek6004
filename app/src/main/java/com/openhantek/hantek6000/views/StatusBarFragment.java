@@ -168,6 +168,8 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(getActivity() == null) return;
+
                     if (triggered) {
                         mTriggerStatus.setTextColor(getResources().getColor(R.color.status_bar_valid_color));
                         mTriggerStatus.setBackground(getResources().getDrawable(R.drawable.rounded_corner));

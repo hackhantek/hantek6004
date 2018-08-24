@@ -182,4 +182,14 @@ public interface MainDataSource {
      * @return channel input cooupling
      */
     InputCoupling getChInputCoupling(int chIndex);
+
+    /**
+     * Set voltage per DIV of channel of chIndex to next bigger.
+     */
+    void increaseVoltsPerDiv();
+
+    /**
+     * Set voltage per DIV of channel of chIndex to prvious smaller.
+     */
+    void decreaseVoltsPerDiv();
 }

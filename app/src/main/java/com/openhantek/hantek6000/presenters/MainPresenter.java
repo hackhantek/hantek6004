@@ -126,6 +126,10 @@ public class MainPresenter {
             loadRealDevice();
     }
 
+    public void releaseDevice() {
+        mHantekUsbManager.releaseDevice();
+    }
+
     public void loadDemoDevice(int[] colors, Object scopeView) {
         assert colors != null;
         assert scopeView != null;

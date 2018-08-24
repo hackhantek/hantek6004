@@ -1,5 +1,6 @@
 package com.openhantek.hantek6000.views;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -16,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -34,7 +37,7 @@ import com.hantek.ht6000api.HtScopeView;
 /**
  * Include ScopeView and zero level markers.
  */
-public class MainFragment extends Fragment implements MainPresenter.View{
+public class MainFragment extends Fragment implements MainPresenter.View {
 
     private final static String TAG = "MainFragment";
     private MainPresenter mPresenter;
@@ -75,14 +78,22 @@ public class MainFragment extends Fragment implements MainPresenter.View{
 
     @Override
     public void onDestroy() {
+        System.out.println("MainFragment:" + "onDestroy");
         if (mUsbReceiver != null) {
             mContext.unregisterReceiver(mUsbReceiver);
         }
+        mPresenter.releaseDevice();
         super.onDestroy();
+
+        // Solve: press the Back button to exit APP, enter again, can not see the waveform
+        // mScopeView don't call onDraw
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
     }
 
     //region Helper methods
     // setup UI elements
+    @SuppressLint("ClickableViewAccessibility")
     private void setupUiElements(View root) {
         mChLevers = new HtMarkerView[mPresenter.getAnalogChannelCount()];
 
@@ -333,6 +344,7 @@ public class MainFragment extends Fragment implements MainPresenter.View{
 
     @Override
     public void updateTriggerLevelColor(int triggerSource) {
+        if(getActivity() == null) return;
 
         int color = -1;
         switch (triggerSource){

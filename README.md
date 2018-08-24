@@ -37,7 +37,7 @@ Download the latest release from [release page](https://github.com/hackhantek/ha
 6. ~~Quick trigger settings by tap zero level marker.~~
 7. ~~Draw coupling indicator on channel zero level marker~~
 8. ~~Atuoset~~
-9. Voltage adjust by gesture
+9. ~~Voltage adjust by gesture~~
 10. Add trigger sweep settings in trigger quick settings
 11. Timebase adjust by gesture
     1. gesutre

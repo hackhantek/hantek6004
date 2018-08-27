@@ -192,4 +192,30 @@ public interface MainDataSource {
      * Set voltage per DIV of channel of chIndex to prvious smaller.
      */
     void decreaseVoltsPerDiv();
+
+    /**
+     * Increase timebase to next bigger.
+     */
+    void increaseTimebase();
+
+    /**
+     * Decrease timebase to previous smaller.
+     */
+    void decreaseTimebase();
+
+    /**
+     * Change selected channel.
+     * <p>When adjusting the volts by the pinch gesture, the volts of
+     * the selected channel is adjusted.</p>
+     * @param chIndex new seleted channel index.
+     */
+    void setSelectedChannel(int chIndex);
+
+    boolean isLargestVoltsPerDiv();
+
+    boolean isSmallestVoltsPerDiv();
+
+    boolean isLargestTimebase();
+
+    boolean isSmallestTimebase();
 }

@@ -246,6 +246,63 @@ public class MainPresenter {
         mDataSource.centerTriggerLevel();
     }
 
+    /**
+     * Increase timebase to ndex bigger.
+     */
+    public void increaseTimebase() {
+        if (mDataSource.isLargestTimebase()) {
+            mView.promptLargestTimebase();
+            return;
+        }
+
+        mDataSource.increaseTimebase();
+    }
+
+    /**
+     * Decrease timebase to previous smaller.
+     */
+    public void decreaseTimebase() {
+        if (mDataSource.isSmallestTimebase()) {
+            System.out.println("是最小时基111");
+            mView.promptSmallestTimebase();
+            return;
+        }
+        
+        mDataSource.decreaseTimebase();
+    }
+
+    /**
+     * Change the selected channel.
+     * @param chIndex new selected channel.
+     */
+    public void changeSelectedChannel(int chIndex) {
+        mDataSource.setSelectedChannel(chIndex);
+    }
+
+    /**
+     * Decrease the volts per div of current selected channel.
+     */
+    public void decreaseVoltsPerDiv() {
+        if(mDataSource.isSmallestVoltsPerDiv()) {
+            mView.promptSmallestVoltsPerDiv();
+            return;
+        }
+
+        mDataSource.decreaseVoltsPerDiv();
+    }
+
+    /**
+     * Increase the volts per div of current selected channel.
+     */
+    public void increaseVoltsPerDiv() {
+        if(mDataSource.isLargestVoltsPerDiv()) {
+            mView.promptLargestVoltsPerDiv();
+            return;
+        }
+        
+        mDataSource.increaseVoltsPerDiv();
+    }
+
     //endregion Presenter Method
 
     public interface View {
@@ -293,5 +350,13 @@ public class MainPresenter {
          * @param inputCoupling input coupling
          */
         void updateChCouplingIndicator(int chIndex, InputCoupling inputCoupling);
+
+        void promptLargestVoltsPerDiv();
+
+        void promptSmallestVoltsPerDiv();
+
+        void promptLargestTimebase();
+
+        void promptSmallestTimebase();
     }
 }

@@ -157,13 +157,46 @@ public class MainRepository implements MainDataSource{
 
     @Override
     public void increaseVoltsPerDiv() {
-
         HantekSdk.increaseVoltsPerDiv();
     }
 
     @Override
     public void decreaseVoltsPerDiv() {
-
         HantekSdk.decreaseVoltsPerDiv();
+    }
+
+    @Override
+    public void increaseTimebase() {
+        HantekSdk.increaseTimebase();
+    }
+
+    @Override
+    public void decreaseTimebase() {
+        HantekSdk.decreaseTimebase();
+    }
+
+    @Override
+    public void setSelectedChannel(int chIndex) {
+        HantekSdk.setSelectedChannel(chIndex);
+    }
+
+    @Override
+    public boolean isLargestVoltsPerDiv() {
+        return HantekSdk.isLargestVoltsPerDiv();
+    }
+
+    @Override
+    public boolean isSmallestVoltsPerDiv() {
+        return HantekSdk.isSmallestVoltsPerDiv();
+    }
+
+    @Override
+    public boolean isLargestTimebase() {
+        return HantekSdk.isLargestTimebase();
+    }
+
+    @Override
+    public boolean isSmallestTimebase() {
+        return HantekSdk.isSmallestTimebase();
     }
 }

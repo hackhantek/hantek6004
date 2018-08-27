@@ -50,4 +50,8 @@
     <!--trigger slope-->
     <string name="trigger_slope_rising">Rising</string>
     <string name="trigger_slope_falling">Falling</string>
+    <string name="largest_volts_div">The current volts/div is already the largest.</string>
+    <string name="smallest_volts_div">The current volts/div is already the smallest.</string>
+    <string name="largest_timebase">The current timebase is already the largest.</string>
+    <string name="smallest_timebase">The current timebase is already the smallest.</string>
 </resources>

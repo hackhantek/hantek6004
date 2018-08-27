@@ -17,14 +17,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hantek.ht6000api.HtMarkerView;
 import com.hantek.ht6000api.HtMarkerViewListener;
+import com.hantek.ht6000api.HtScopeViewListener;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
@@ -37,7 +36,8 @@ import com.hantek.ht6000api.HtScopeView;
 /**
  * Include ScopeView and zero level markers.
  */
-public class MainFragment extends Fragment implements MainPresenter.View {
+public class MainFragment extends Fragment implements MainPresenter.View,
+        HtScopeViewListener{
 
     private final static String TAG = "MainFragment";
     private MainPresenter mPresenter;
@@ -113,6 +113,7 @@ public class MainFragment extends Fragment implements MainPresenter.View {
                 updateLeversRange();
             }
         });
+        mScopeView.setListener(this);
 
         // Set channel zero level marker event listener
         for (HtMarkerView marker: mChLevers) {
@@ -317,6 +318,26 @@ public class MainFragment extends Fragment implements MainPresenter.View {
     }
 
     @Override
+    public void promptLargestTimebase() {
+        Toast.makeText(getContext(), getResources().getString(R.string.largest_timebase), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void promptSmallestTimebase() {
+        Toast.makeText(getContext(), getResources().getString(R.string.smallest_timebase), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void promptLargestVoltsPerDiv() {
+        Toast.makeText(getContext(), getResources().getString(R.string.largest_volts_div), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void promptSmallestVoltsPerDiv() {
+        Toast.makeText(getContext(), getResources().getString(R.string.smallest_volts_div), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void updateTriggerLevelPos(final int triggerLevelPos) {
         if (getActivity() == null) return;
         getActivity().runOnUiThread(new Runnable() {
@@ -467,4 +488,33 @@ public class MainFragment extends Fragment implements MainPresenter.View {
             }
         }
     };
+
+    //region Handle gesture
+
+    // why put gesture handler in here?
+    // because can pop-up custom prompts in different languages.
+
+    @Override
+    public void horizontalPinchDetected(boolean expand) {
+        if (expand) {
+            mPresenter.increaseTimebase();
+        } else {
+            mPresenter.decreaseTimebase();
+        }
+    }
+
+    @Override
+    public void selectedChannelChanged(int chIndex) {
+        mPresenter.changeSelectedChannel(chIndex);
+    }
+
+    @Override
+    public void verticalPinchDetected(boolean expand) {
+        if (expand) {
+            mPresenter.decreaseVoltsPerDiv();
+        } else {
+            mPresenter.increaseVoltsPerDiv();
+        }
+    }
+    //endregion Handle gesture
 }

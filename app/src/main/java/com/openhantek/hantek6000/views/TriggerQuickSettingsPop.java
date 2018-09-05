@@ -12,22 +12,27 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.hantek.ht6000api.ht6000.TriggerSlope;
+import com.hantek.ht6000api.ht6000.TriggerSweep;
 import com.openhantek.hantek6000.R;
 
 // Responsible for the trigger quick set popup
 public class TriggerQuickSettingsPop {
-    private final int mSource; // current trigger source
-    private final TriggerSlope mSlope; // current trigger slope.
+    private final TriggerSweep mSweep; // initial trigger sweep.
+    private final int mSource; // initial trigger source
+    private final TriggerSlope mSlope; // initial trigger slope.
     private PopupWindow mPopupWindow; // the PopupWindow
     // the trigger marker view
     private View mTriggerView;
     private Context mContext;
     private LinearLayout mSourceLayout;
     private LinearLayout mSlopeLayout;
+    private LinearLayout mSweepLayout;
     // source button in first level.
     private Button mSourceButton;
     // slope button in first level.
     private Button mSlopeButton;
+    // sweep button in first level.
+    private Button mSweepButton;
     // message listener
     private TriggerQuickSettingsPopListener mListener;
 
@@ -35,12 +40,14 @@ public class TriggerQuickSettingsPop {
      * Constructor.
      * @param view the clicked view.
      * @param context context
-     * @param triggerSource current tirgger source
-     * @param triggerSlope current tirgger slope
+     * @param triggerSweep current trigger sweep
+     * @param triggerSource current trigger source
+     * @param triggerSlope current trigger slope
      */
-    TriggerQuickSettingsPop(View view, Context context, int triggerSource, TriggerSlope triggerSlope) {
+    TriggerQuickSettingsPop(View view, Context context, TriggerSweep triggerSweep, int triggerSource, TriggerSlope triggerSlope) {
         mTriggerView = view;
         mContext = context;
+        mSweep = triggerSweep;
         mSource = triggerSource;
         mSlope = triggerSlope;
     }
@@ -91,6 +98,7 @@ public class TriggerQuickSettingsPop {
     private void setupUi(View mainView) {
         mSourceLayout = mainView.findViewById(R.id.trigger_quick_settings_source_layout);
         mSlopeLayout = mainView.findViewById(R.id.trigger_quick_settings_slope_layout);
+        mSweepLayout = mainView.findViewById(R.id.trigger_quick_settings_sweep_layout);
 
         // source button click event
         mSourceButton = mainView.findViewById(R.id.trigger_quick_settings_source_button);
@@ -113,6 +121,18 @@ public class TriggerQuickSettingsPop {
             }
         });
 
+        // trigger sweep button click event, show trigger sweep popup
+        mSweepButton = mainView.findViewById(R.id.trigger_quick_settings_sweep_button);
+        mSweepButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                toggleSweepSettingsVisibility();
+                closeSettingsExceptSweep();
+            }
+        });
+
+        // setup sweep buttons listener
+        setupSweepButtonsListener();
         // setup source button listener
         setupSourceButtonsListener();
         // setup slope button listener
@@ -147,6 +167,19 @@ public class TriggerQuickSettingsPop {
                 mSlopeButton.setText(mContext.getResources().getString(R.string.trigger_slope_falling));
                 break;
         }
+
+        switch (mSweep) {
+
+            case Auto:
+                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_auto));
+                break;
+            case Normal:
+                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_normal));
+                break;
+            case Single:
+                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_single));
+                break;
+        }
     }
 
     // toggle trigger settings visibility
@@ -168,14 +201,41 @@ public class TriggerQuickSettingsPop {
         }
     }
 
+    // toggle sweep settings visibility
+    private void toggleSweepSettingsVisibility() {
+        if (mSweepLayout.getVisibility() == View.GONE) {
+            mSweepLayout.setVisibility(View.VISIBLE);
+        } else {
+            mSweepLayout.setVisibility(View.GONE);
+        }
+    }
+
     // close settings except trigger source
     private void closeSettingsExceptSource() {
         mSlopeLayout.setVisibility(View.GONE);
+        mSweepLayout.setVisibility(View.GONE);
     }
 
     // close settings except slope source
     private void closeSettingsExceptSlope() {
         mSourceLayout.setVisibility(View.GONE);
+        mSweepLayout.setVisibility(View.GONE);
+    }
+
+    private void closeSettingsExceptSweep() {
+        mSourceLayout.setVisibility(View.GONE);
+        mSlopeLayout.setVisibility(View.GONE);
+    }
+
+    // setup sweep buttons listener.
+    private void setupSweepButtonsListener() {
+        Button button;
+        button = mSweepLayout.findViewById(R.id.trigger_quick_settings_sweep_auto);
+        button.setOnClickListener(mSweepButtonsListener);
+        button = mSweepLayout.findViewById(R.id.trigger_quick_settings_sweep_normal);
+        button.setOnClickListener(mSweepButtonsListener);
+        button = mSweepLayout.findViewById(R.id.trigger_quick_settings_sweep_single);
+        button.setOnClickListener(mSweepButtonsListener);
     }
 
     // setup source buttons listener
@@ -199,6 +259,33 @@ public class TriggerQuickSettingsPop {
         button = mSlopeLayout.findViewById(R.id.trigger_quick_settings_slope_falling);
         button.setOnClickListener(mSlopeButtonsListener);
     }
+
+    // sweep buttons click event handler.
+    private View.OnClickListener mSweepButtonsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mSweepLayout.setVisibility(View.GONE);
+            mSweepButton.setText(((Button)v).getText());
+
+            // get trigger sweep
+            TriggerSweep sweep = null;
+            switch (v.getId()) {
+                case R.id.trigger_quick_settings_sweep_auto:
+                    sweep = TriggerSweep.Auto;
+                    break;
+                case R.id.trigger_quick_settings_sweep_normal:
+                    sweep = TriggerSweep.Normal;
+                    break;
+                case R.id.trigger_quick_settings_sweep_single:
+                    sweep = TriggerSweep.Single;
+                    break;
+            }
+
+            if (sweep != null && mListener != null) {
+                mListener.onSweepChanged(sweep);
+            }
+        }
+    };
 
     // source button click event handler.
     private View.OnClickListener mSourceButtonsListener = new View.OnClickListener() {
@@ -270,5 +357,6 @@ public class TriggerQuickSettingsPop {
     interface TriggerQuickSettingsPopListener{
         void onSourceChanged(int source);
         void onSlopeChanged(TriggerSlope slope);
+        void onSweepChanged(TriggerSweep sweep);
     }
 }

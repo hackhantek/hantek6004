@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.hantek.ht6000api.HtScopeViewListener;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
+import com.hantek.ht6000api.ht6000.TriggerSweep;
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.models.HtUsbManager;
 import com.openhantek.hantek6000.presenters.MainPresenter;
@@ -52,7 +54,8 @@ public class MainFragment extends Fragment implements MainPresenter.View,
     // Trigger Level Marker
     private HtMarkerView mTriggerLevelMarker;
     private ChQuickSettingsPop mChQuickSettingsPop; // channel quick settings popup window handler.
-    private TriggerQuickSettingsPop mTriggerSettingsPop; // trigger quick setttings popup window handler.
+    private TriggerQuickSettingsPop mTriggerSettingsPop; // trigger quick settings popup window handler.
+    private MediaPlayer mMediaPlayer; // use to play sound tip
 
     @Nullable
     @Override
@@ -66,6 +69,8 @@ public class MainFragment extends Fragment implements MainPresenter.View,
 
         mPresenter.checkDeviceExist(R.xml.device_filter);
         setupUsbReceiver();
+
+        mMediaPlayer = MediaPlayer.create(getContext(), R.raw.msg);
 
         return root;
     }
@@ -148,6 +153,11 @@ public class MainFragment extends Fragment implements MainPresenter.View,
                 public void onSlopeChanged(TriggerSlope slope) {
                     mPresenter.setTriggerSlope(slope);
                 }
+
+                @Override
+                public void onSweepChanged(TriggerSweep sweep) {
+                    mPresenter.setTriggerSweep(sweep);
+                }
             };
 
     // marker event listener.
@@ -188,6 +198,7 @@ public class MainFragment extends Fragment implements MainPresenter.View,
                 mChQuickSettingsPop.setListener(mChQuickSettingsListener);
             } else {
                 mTriggerSettingsPop = new TriggerQuickSettingsPop(view, mContext,
+                        mPresenter.getTriggerSweep(),
                         mPresenter.getTriggerSource(),
                         mPresenter.getTriggerSlope());
                 mTriggerSettingsPop.show();
@@ -223,7 +234,6 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         // drag ended
         @Override
         public void onMarkerDragEnded(View view, int position) {
-            System.out.println("MainFragment:" + "DragEnded event received." + position);
             switch (view.getId()) {
                 case R.id.ch1LevelMarker:
                     mPresenter.handleChZeroMarkerDragEnded(0, position);
@@ -325,6 +335,23 @@ public class MainFragment extends Fragment implements MainPresenter.View,
     @Override
     public void promptSmallestTimebase() {
         Toast.makeText(getContext(), getResources().getString(R.string.smallest_timebase), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void refreshScopeView() {
+        mScopeView.update();
+    }
+
+    @Override
+    public void playSingleCaptureSound() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMediaPlayer.start();
+                }
+            });
+        }
     }
 
     @Override

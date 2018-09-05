@@ -5,6 +5,7 @@ import com.hantek.ht6000api.HantekSdk;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
+import com.hantek.ht6000api.ht6000.TriggerSweep;
 
 public class MainRepository implements MainDataSource{
 
@@ -131,6 +132,16 @@ public class MainRepository implements MainDataSource{
     }
 
     @Override
+    public void setTriggerSweep(TriggerSweep sweep) {
+        HantekSdk.setTriggerSweep(sweep);
+    }
+
+    @Override
+    public TriggerSweep getTriggerSweep() {
+        return HantekSdk.getTriggerSweep();
+    }
+
+    @Override
     public int getTriggerSource() {
         return HantekSdk.getTriggerSource();
     }
@@ -198,5 +209,10 @@ public class MainRepository implements MainDataSource{
     @Override
     public boolean isSmallestTimebase() {
         return HantekSdk.isSmallestTimebase();
+    }
+
+    @Override
+    public void clearChannels() {
+        HantekSdk.clearChannels();
     }
 }

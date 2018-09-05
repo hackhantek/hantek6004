@@ -7,11 +7,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <!--Sweep Button-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPopup"
-        android:id="@+id/trigger_quick_settings_source_button_wrapper">
+        android:id="@+id/trigger_quick_settings_sweep_button_wrapper">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trigger_quick_settings_sweep_button"
+            android:text="@string/trigger_sweep_auto" />
+    </LinearLayout>
+
+    <!--Source Button-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPopup"
+        android:id="@+id/trigger_quick_settings_source_button_wrapper"
+        app:layout_constraintStart_toEndOf="@id/trigger_quick_settings_sweep_button_wrapper">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,13 +35,14 @@
             app:layout_constraintStart_toStartOf="parent"/>
     </LinearLayout>
 
+    <!--Slope Button-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPopup"
         android:id="@+id/trigger_quick_settings_slope_button_wrapper"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/trigger_quick_settings_source_button_wrapper">
+        app:layout_constraintStart_toEndOf="@id/trigger_quick_settings_source_button_wrapper"
+        app:layout_constraintEnd_toEndOf="parent">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +50,35 @@
             android:text="@string/trigger_slope_rising" />
     </LinearLayout>
 
+    <!--Trigger Sweep-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/trigger_quick_settings_sweep_layout"
+        android:visibility="gone"
+        android:background="@color/colorPopup"
+        app:layout_constraintStart_toStartOf="@id/trigger_quick_settings_sweep_button_wrapper"
+        app:layout_constraintEnd_toEndOf="@id/trigger_quick_settings_sweep_button_wrapper"
+        app:layout_constraintTop_toBottomOf="@+id/trigger_quick_settings_sweep_button_wrapper">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trigger_quick_settings_sweep_auto"
+            android:text="@string/trigger_sweep_auto"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trigger_quick_settings_sweep_normal"
+            android:text="@string/trigger_sweep_normal"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trigger_quick_settings_sweep_single"
+            android:text="@string/trigger_sweep_single"/>
+    </LinearLayout>
 
+    <!--Trigger Source-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,6 +111,7 @@
             android:text="@string/ch4"/>
     </LinearLayout>
 
+    <!--Trigger Slope-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

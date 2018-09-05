@@ -6,6 +6,7 @@ import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
+import com.hantek.ht6000api.ht6000.TriggerSweep;
 
 public interface MainDataSource {
     /**
@@ -154,6 +155,18 @@ public interface MainDataSource {
     void setTriggerSlope(TriggerSlope slope);
 
     /**
+     * Get current trigger sweep.
+     * @return current trigger sweep
+     */
+    TriggerSweep getTriggerSweep();
+
+    /**
+     * Set trigger sweep.
+     * @param sweep new trigger sweep
+     */
+    void setTriggerSweep(TriggerSweep sweep);
+
+    /**
      * Get trigger source
      * @return trigger source. 0:CH1...
      */
@@ -218,4 +231,9 @@ public interface MainDataSource {
     boolean isLargestTimebase();
 
     boolean isSmallestTimebase();
+
+    /**
+     * Clear all analog channels data.
+     */
+    void clearChannels();
 }

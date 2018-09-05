@@ -12,25 +12,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorCha"
-        android:id="@+id/ch1ToggleButton" />
+        android:id="@+id/ch1ToggleButton"
+        android:textAllCaps="false" />
 
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorChb"
-        android:id="@+id/ch2ToggleButton" />
+        android:id="@+id/ch2ToggleButton"
+        android:textAllCaps="false" />
 
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorChc"
-        android:id="@+id/ch3ToggleButton" />
+        android:id="@+id/ch3ToggleButton"
+        android:textAllCaps="false" />
 
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorChd"
-        android:id="@+id/ch4ToggleButton" />
+        android:id="@+id/ch4ToggleButton"
+        android:textAllCaps="false" />
 
     <TextView
         android:layout_width="wrap_content"

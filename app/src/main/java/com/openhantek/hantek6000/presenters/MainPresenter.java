@@ -4,6 +4,7 @@ import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
+import com.hantek.ht6000api.ht6000.TriggerSweep;
 import com.openhantek.hantek6000.models.HtUsbManagerInterface;
 import com.openhantek.hantek6000.models.MainDataSource;
 import com.openhantek.hantek6000.models.MainRepository;
@@ -48,7 +49,7 @@ public class MainPresenter {
 
         @Override
         public void onSingleCaptureEnded() {
-
+            mView.playSingleCaptureSound();
         }
 
         @Override
@@ -208,11 +209,29 @@ public class MainPresenter {
     }
 
     /**
+     * Set trigger sweep.
+     * @param sweep new trigger sweep
+     */
+    public void setTriggerSweep(TriggerSweep sweep) {
+        mDataSource.setTriggerSweep(sweep);
+        mDataSource.clearChannels();
+        mView.refreshScopeView();
+    }
+
+    /**
      * Set trigger slope.
      * @param slope new trigger slope.
      */
     public void setTriggerSlope(TriggerSlope slope) {
         mDataSource.setTriggerSlope(slope);
+    }
+
+    /**
+     * Get trigger sweep.
+     * @return current trigger sweep
+     */
+    public TriggerSweep getTriggerSweep() {
+        return mDataSource.getTriggerSweep();
     }
 
     /**
@@ -263,7 +282,6 @@ public class MainPresenter {
      */
     public void decreaseTimebase() {
         if (mDataSource.isSmallestTimebase()) {
-            System.out.println("是最小时基111");
             mView.promptSmallestTimebase();
             return;
         }
@@ -358,5 +376,15 @@ public class MainPresenter {
         void promptLargestTimebase();
 
         void promptSmallestTimebase();
+
+        /**
+         * Refresh HtScopeView.
+         */
+        void refreshScopeView();
+
+        /**
+         * Play a sound, let user know single triggered.
+         */
+        void playSingleCaptureSound();
     }
 }

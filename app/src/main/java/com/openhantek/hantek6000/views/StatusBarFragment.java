@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.hantek.ht6000api.HtScopeView;
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.presenters.StatusBarPresenter;
 
@@ -204,6 +205,11 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         if (mAutoButton.isEnabled() != enabled) {
             mAutoButton.setEnabled(enabled);
         }
+    }
+
+    @Override
+    public void refreshScopeView() {
+        ((MainFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.mainFragment)).refreshScopeView();
     }
     //endregion
 }

@@ -80,6 +80,12 @@ public class StatusBarPresenter  {
      */
     public void switchRunStop() {
         mDataSource.switchRunStop();
+        // Clear waves. Fix: After single trigger has triggered, press RUN button
+        // waves still there.
+        if (mDataSource.isRunning()) {
+            mDataSource.clearChannels();
+            mView.refreshScopeView();
+        }
     }
 
     /**
@@ -150,5 +156,10 @@ public class StatusBarPresenter  {
          * @param enabled in real mode
          */
         void setRunButtonEnabled(boolean enabled);
+
+        /**
+         * Refresh scope view.
+         */
+        void refreshScopeView();
     }
 }

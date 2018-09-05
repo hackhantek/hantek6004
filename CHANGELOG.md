@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.4.0] -2018-9-5
+
+### Added
+
+- Trigger sweep settings in trigger quick settings.
+
 ## [0.3.0] - 2018-8-27
 
 ### Added

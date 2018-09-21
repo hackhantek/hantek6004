@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Main menu content-->
+    <string-array name="menu_main">
+        <item>Measure</item>
+        <item>About</item>
+    </string-array>
+    <!--Measure menu content-->
+    <string-array name="menu_measure">
+        <item>Source</item>
+        <item>Horizontal</item>
+        <item>Vertical</item>
+        <item>Clear</item>
+    </string-array>
+    <!--Analog channel-->
+    <string-array name="anlog_channel">
+        <item>CH1</item>
+        <item>CH2</item>
+        <item>CH3</item>
+        <item>CH4</item>
+    </string-array>
+    <!--Horizontal measure items-->
+    <string-array name="menu_measure_horizontal">
+        <item>Period</item>
+        <item>Frequency</item>
+        <item>Rising</item>
+        <item>Falling</item>
+        <item>+ Duty Cycle</item>
+        <item>- Negative Cycle</item>
+        <item>+ Pulse Width</item>
+        <item>- Negative Width</item>
+    </string-array>
+    <!--Vertical measure items-->
+    <string-array name="menu_measure_vertical">
+        <item>Max</item>
+        <item>Min</item>
+        <item>Peak to Peak</item>
+        <item>Top</item>
+        <item>Base</item>
+        <item>Middle</item>
+        <item>RMS</item>
+        <item>Amplitude</item>
+        <item>Average</item>
+        <item>Period Average</item>
+        <item>Positive Overshoot</item>
+        <item>Negative Overshoot</item>
+    </string-array>
+</resources>

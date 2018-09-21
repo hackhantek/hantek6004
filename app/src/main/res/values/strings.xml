@@ -59,4 +59,10 @@
     <string name="smallest_volts_div">The current volts/div is already the smallest.</string>
     <string name="largest_timebase">The current timebase is already the largest.</string>
     <string name="smallest_timebase">The current timebase is already the smallest.</string>
+
+    <!--Other-->
+    <string name="title_activity_main_menu">Hantek6000</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

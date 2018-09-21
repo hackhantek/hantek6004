@@ -2,6 +2,7 @@ package com.openhantek.hantek6000.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,9 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.hantek.ht6000api.HtScopeView;
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.presenters.StatusBarPresenter;
+import com.openhantek.hantek6000.views.menus.MainMenuActivity;
 
 // 顶部状态栏
 public class StatusBarFragment extends Fragment implements StatusBarPresenter.View, View.OnClickListener {
@@ -25,6 +26,7 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
     private TextView mTimeBase; // TimeBase text view.
     private ToggleButton mRunButton; // run button.
     private Button mAutoButton; // auto button.
+    private Button mMenuButton; // MENU button
     private TextView mTriggerStatus; // trigger status text view;
     private Context mContext;
     private AlertDialog mAutosetDialog; // Autoset dialog.
@@ -76,6 +78,9 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         mAutoButton = rootView.findViewById(R.id.autoButton);
         mAutoButton.setOnClickListener(this);
         rootView.findViewById(R.id.menuButton).setOnClickListener(this);
+
+        mMenuButton = rootView.findViewById(R.id.menuButton);
+        mMenuButton.setOnClickListener(this);
     }
 
     // Handle click event.
@@ -99,6 +104,9 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
                 break;
             case R.id.autoButton:
                 mPresenter.handleAutoButtonClick();
+                break;
+            case R.id.menuButton:
+                mPresenter.handleMenuButtonClick();
                 break;
         }
     }
@@ -210,6 +218,12 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
     @Override
     public void refreshScopeView() {
         ((MainFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.mainFragment)).refreshScopeView();
+    }
+
+    @Override
+    public void showMenu() {
+        Intent intent = new Intent(getActivity(), MainMenuActivity.class);
+        startActivity(intent);
     }
     //endregion
 }

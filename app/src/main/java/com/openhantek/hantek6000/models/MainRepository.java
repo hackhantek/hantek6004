@@ -3,6 +3,8 @@ package com.openhantek.hantek6000.models;
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.HantekSdk;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.AutomeasureItem;
+import com.hantek.ht6000api.ht6000.AutomeasureType;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
 import com.hantek.ht6000api.ht6000.TriggerSweep;
@@ -213,6 +215,21 @@ public class MainRepository implements MainDataSource{
 
     @Override
     public void clearChannels() {
-        HantekSdk.clearChannels();
+        HantekSdk.clearSamples();
+    }
+
+    @Override
+    public void addAutoMeasure(AutomeasureType type) {
+        HantekSdk.addAutoMeasure(type);
+    }
+
+    @Override
+    public void setAutoMeasureSource(int chIndex) {
+        HantekSdk.setAutoMeasureSource(chIndex);
+    }
+
+    @Override
+    public int getAutoMeasureSource() {
+        return HantekSdk.getAutoMeasureSource();
     }
 }

@@ -4,6 +4,7 @@ package com.openhantek.hantek6000.models;
 
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
+import com.hantek.ht6000api.ht6000.AutomeasureType;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
 import com.hantek.ht6000api.ht6000.TriggerSweep;
@@ -236,4 +237,22 @@ public interface MainDataSource {
      * Clear all analog channels data.
      */
     void clearChannels();
+
+    /**
+     * Add an auto measure item.
+     * @param type auto measure type.
+     */
+    void addAutoMeasure(AutomeasureType type);
+
+    /**
+     * Set auto measure source channel.
+     * @param chIndex channel index. 0:CH1...
+     */
+    void setAutoMeasureSource(int chIndex);
+
+    /**
+     * Get auto measure source
+     * @return source channel index. 0:CH1...
+     */
+    int getAutoMeasureSource();
 }

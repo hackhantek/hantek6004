@@ -81,6 +81,7 @@
         app:sampleMin="@integer/sample_min"
         app:sampleMax="@integer/sample_max"
         app:gestureEnabled="true"
+        app:drawAutoMeasure="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

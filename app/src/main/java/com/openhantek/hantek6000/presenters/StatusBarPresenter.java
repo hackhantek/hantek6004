@@ -107,6 +107,15 @@ public class StatusBarPresenter  {
         mView.showAutosetDialog();
     }
 
+    /**
+     * Handle MENU button click event.
+     * <p>Should popup menu.</p>
+     */
+    public void handleMenuButtonClick() {
+
+        mView.showMenu();
+    }
+
     public interface View {
 
         /**
@@ -161,5 +170,10 @@ public class StatusBarPresenter  {
          * Refresh scope view.
          */
         void refreshScopeView();
+
+        /**
+         * Popup main MENU.
+         */
+        void showMenu();
     }
 }

@@ -22,7 +22,8 @@
         app:htMarkerColor="@color/colorCha"
         app:htMarkerRatio="2.8"
         app:htMarkerType="htMarkerTypeRight"
-        app:htMarkerTitle="1" />
+        app:htMarkerTitle="1"
+        app:htDrawCoupling="true" />
 
     <!--CH2 zero level position marker-->
     <com.hantek.ht6000api.HtMarkerView
@@ -34,7 +35,8 @@
         app:htMarkerColor="@color/colorChb"
         app:htMarkerRatio="2.8"
         app:htMarkerType="htMarkerTypeRight"
-        app:htMarkerTitle="2" />
+        app:htMarkerTitle="2"
+        app:htDrawCoupling="true" />
 
     <!--CH3 zero level position marker-->
     <com.hantek.ht6000api.HtMarkerView
@@ -46,7 +48,8 @@
         app:htMarkerColor="@color/colorChc"
         app:htMarkerRatio="2.8"
         app:htMarkerType="htMarkerTypeRight"
-        app:htMarkerTitle="3" />
+        app:htMarkerTitle="3"
+        app:htDrawCoupling="true" />
 
     <!--CH4 zero level position marker-->
     <com.hantek.ht6000api.HtMarkerView
@@ -58,7 +61,8 @@
         app:htMarkerColor="@color/colorChd"
         app:htMarkerRatio="2.8"
         app:htMarkerType="htMarkerTypeRight"
-        app:htMarkerTitle="4" />
+        app:htMarkerTitle="4"
+        app:htDrawCoupling="true" />
 
     <!--Waveform view-->
     <!--drawSelectedChBk：whether to draw selected channel background-->

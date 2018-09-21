@@ -7,11 +7,8 @@ The Hantek60x4 device have no official Android APP. This is a reverse engineered
 ## Supported Device
 
 - Hantek6074BE
-
 - Hantek6004BC series: Hantek6074BC/Hantek6104BC/Hantek6204BC/Hantek6254BC
 - Hantek6004BD series: Hantek6074BD/Hantek6104BD/Hantek6204BD/Hantek6254BD
-
-
 
 ![hantek6000-screenshot](hantek6000-screenshot.png)
 
@@ -38,17 +35,17 @@ Download the latest release from [release page](https://github.com/hackhantek/ha
 7. ~~Draw coupling indicator on channel zero level marker~~
 8. ~~Atuoset~~
 9. ~~Voltage adjust by gesture~~
-10. Add trigger sweep settings in trigger quick settings
+10. ~~Add trigger sweep settings in trigger quick settings~~
 11. Timebase adjust by gesture
-    1. gesutre
+    1. ~~gesutre~~
     2. dropdown list
-12. change channel zero level by drag channel wave
-13. dropdown list
-14. Automeasure
-15. Cusor Measure
-16. Menu
-17. Factorysetup
-18. Self calibration
+12. ~~Menu~~
+13. ~~Automeasure~~
+14. Factorysetup
+15. Self calibration
+16. Cusor Measure
+17. Record
+18. Change channel zero level by drag channel wave
 
 ## Other
 

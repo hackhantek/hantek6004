@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.5.0] - 2018-9-21
+
+### Added
+
+- Auto measure
+
 ## [0.4.0] -2018-9-5
 
 ### Added

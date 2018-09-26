@@ -3,6 +3,7 @@
     <!--Main menu content-->
     <string-array name="menu_main">
         <item>Measure</item>
+        <item>Tools</item>
         <item>About</item>
     </string-array>
     <!--Measure menu content-->
@@ -44,5 +45,10 @@
         <item>Period Average</item>
         <item>Positive Overshoot</item>
         <item>Negative Overshoot</item>
+    </string-array>
+    <!--Tools menu content-->
+    <string-array name="menu_tools_content">
+        <item>Factory Setup</item>
+        <item>Self Calibration</item>
     </string-array>
 </resources>

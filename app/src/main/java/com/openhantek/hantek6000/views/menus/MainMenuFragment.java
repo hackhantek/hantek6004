@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.views.menus.measure.MeasureMenuFragment;
+import com.openhantek.hantek6000.views.menus.tools.ToolsMenuFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +39,7 @@ public class MainMenuFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main_menu, container, false);
@@ -76,6 +77,15 @@ public class MainMenuFragment extends Fragment {
                                 R.anim.exit_to_right)
                         .addToBackStack(null)
                         .replace(R.id.menu_fragment_container, new MeasureMenuFragment())
+                        .commit();
+            } else if (position == 1) { // show tools menu
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right,
+                                R.anim.exit_to_left,
+                                R.anim.enter_from_left,
+                                R.anim.exit_to_right)
+                        .addToBackStack(null)
+                        .replace(R.id.menu_fragment_container, new ToolsMenuFragment())
                         .commit();
             }
         }

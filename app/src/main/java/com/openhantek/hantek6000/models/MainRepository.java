@@ -3,7 +3,6 @@ package com.openhantek.hantek6000.models;
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.HantekSdk;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
-import com.hantek.ht6000api.ht6000.AutomeasureItem;
 import com.hantek.ht6000api.ht6000.AutomeasureType;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
@@ -30,6 +29,11 @@ public class MainRepository implements MainDataSource{
     @Override
     public void addDeviceListener(HantekDeviceListener listener) {
         HantekSdk.addDeviceListener(listener);
+    }
+
+    @Override
+    public void removeDeviceListener(HantekDeviceListener listener) {
+        HantekSdk.removeDeviceListener(listener);
     }
 
     @Override
@@ -231,5 +235,20 @@ public class MainRepository implements MainDataSource{
     @Override
     public int getAutoMeasureSource() {
         return HantekSdk.getAutoMeasureSource();
+    }
+
+    @Override
+    public void resetToFactory() {
+        HantekSdk.resetToFactory();
+    }
+
+    @Override
+    public boolean isInRealDeviceMode() {
+        return HantekSdk.isInRealMode();
+    }
+
+    @Override
+    public void startSelfCalibration() {
+        HantekSdk.startSelfCalibration();
     }
 }

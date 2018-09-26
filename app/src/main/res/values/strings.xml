@@ -63,6 +63,16 @@
     <!--Other-->
     <string name="title_activity_main_menu">Hantek6000</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Factory setup-->
+    <string name="factory_setup_tip">This will restore all app setups to factory defaults. Continue?</string>
+    <string name="factory_setup_yes">Yes</string>
+    <string name="factory_setup_no">No</string>
+
+    <!--Self calibration dialog-->
+    <string name="self_cali_tip">It is strongly recommended to perform self-calibration after 30 minutes of power-on of the device.\nYou cannot input any signal on any channel during the self-calibration period.\nDo you want to perform self-calibration?</string>
+    <string name="self_cali_yes">Yes</string>
+    <string name="self_cali_no">No</string>
+    <string name="self_cali_real_device">Self-calibration can only be performed  after connecting the real device.</string>
+    <string name="self_cali_performing">Self-calibration is in progress… Please wait</string>
+    <string name="self_cali_stop">Stop</string>
 </resources>

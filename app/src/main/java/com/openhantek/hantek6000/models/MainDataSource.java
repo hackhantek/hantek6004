@@ -31,6 +31,12 @@ public interface MainDataSource {
     void addDeviceListener(HantekDeviceListener listener);
 
     /**
+     * Remove a {@link HantekDeviceListener}.
+     * @param listener a listener
+     */
+    void removeDeviceListener(HantekDeviceListener listener);
+
+    /**
      * Get channel volts per DIV.
      * @param chIndex channel index. 0:CH1
      * @return channel volts per DIV.
@@ -255,4 +261,20 @@ public interface MainDataSource {
      * @return source channel index. 0:CH1...
      */
     int getAutoMeasureSource();
+
+    /**
+     * Reset to factory setup.
+     */
+    void resetToFactory();
+
+    /**
+     * Is real device connected.
+     * @return true: connected. false: no connected
+     */
+    boolean isInRealDeviceMode();
+
+    /**
+     * Start self calibration.
+     */
+    void startSelfCalibration();
 }

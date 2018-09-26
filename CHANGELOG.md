@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.6.0] - 2018-9-26
+
+### Added
+
+- Factory Setup
+- Self calibration
+
 ## [0.5.0] - 2018-9-21
 
 ### Added

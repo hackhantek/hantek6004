@@ -41,11 +41,16 @@ Download the latest release from [release page](https://github.com/hackhantek/ha
     2. dropdown list
 12. ~~Menu~~
 13. ~~Automeasure~~
-14. Factorysetup
-15. Self calibration
-16. Cusor Measure
-17. Record
-18. Change channel zero level by drag channel wave
+14. ~~Factorysetup~~
+15. ~~Self calibration~~
+16. Save APP State
+17. Save/Load Data
+18. Cusor Measure
+19. Vehicle test
+20. Record
+21. FFT
+22. REF
+23. Change channel zero level by drag channel wave
 
 ## Other
 

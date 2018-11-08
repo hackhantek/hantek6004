@@ -12,6 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.openhantek.hantek6000.R;
+import com.openhantek.hantek6000.views.menus.about.AboutMenuFragment;
+import com.openhantek.hantek6000.views.menus.cursor.CursorMenuFragment;
+import com.openhantek.hantek6000.views.menus.file.FileMenuFragment;
 import com.openhantek.hantek6000.views.menus.measure.MeasureMenuFragment;
 import com.openhantek.hantek6000.views.menus.tools.ToolsMenuFragment;
 
@@ -69,23 +72,26 @@ public class MainMenuFragment extends Fragment {
             if (getActivity() == null) return;
             if (getActivity().getSupportFragmentManager() == null) return;
 
-            if (position == 0) { // show measure menu
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_right,
-                                R.anim.exit_to_left,
-                                R.anim.enter_from_left,
-                                R.anim.exit_to_right)
+            Fragment fragment = null;
+            if (position == 0) {        // Create file menu
+                fragment = new FileMenuFragment();
+            } else if (position == 1) { // Create measure menu
+                fragment = new MeasureMenuFragment();
+            } else if (position == 2) { // Create cursor menu
+                fragment = new CursorMenuFragment();
+            } else if (position == 3) { // Create tools menu
+                fragment = new ToolsMenuFragment();
+            } else if (position == 4) { // Create about menu
+                fragment = new AboutMenuFragment();
+            }
+
+            if (fragment != null) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
+                                R.anim.enter_from_left, R.anim.exit_to_right)
                         .addToBackStack(null)
-                        .replace(R.id.menu_fragment_container, new MeasureMenuFragment())
-                        .commit();
-            } else if (position == 1) { // show tools menu
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_right,
-                                R.anim.exit_to_left,
-                                R.anim.enter_from_left,
-                                R.anim.exit_to_right)
-                        .addToBackStack(null)
-                        .replace(R.id.menu_fragment_container, new ToolsMenuFragment())
+                        .replace(R.id.menu_fragment_container, fragment)
                         .commit();
             }
         }

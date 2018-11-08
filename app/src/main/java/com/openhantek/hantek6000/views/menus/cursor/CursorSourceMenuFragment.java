@@ -1,4 +1,4 @@
-package com.openhantek.hantek6000.views.menus.measure;
+package com.openhantek.hantek6000.views.menus.cursor;
 
 
 import android.os.Bundle;
@@ -13,58 +13,70 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.openhantek.hantek6000.R;
-import com.openhantek.hantek6000.presenters.menus.measure.MeasureSourceMenuPresenter;
+import com.openhantek.hantek6000.presenters.menus.cursor.CursorSourceMenuPresenter;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Cursor source menu.
  */
-public class MeasureSourceMenuFragment extends Fragment implements MeasureSourceMenuPresenter.View{
+public class CursorSourceMenuFragment extends Fragment implements CursorSourceMenuPresenter.View {
 
-    private MeasureSourceMenuPresenter mPresenter;
+    private final CursorSourceMenuPresenter mPresenter;
     private ListView mListView;
 
-    public MeasureSourceMenuFragment() {
-        mPresenter = new MeasureSourceMenuPresenter(this);
+    public CursorSourceMenuFragment() {
+        // Required empty public constructor
+        mPresenter = new CursorSourceMenuPresenter(this);
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_measure_source_menu, container, false);
+        return inflater.inflate(R.layout.fragment_cursor_source_menu, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setupListView(view);
+        // Let list view select the current source channel.
         mPresenter.syncWithView();
     }
 
+    // Setup list view.
     private void setupListView(View rootView) {
         if (getContext() == null) return;
 
-        mListView = rootView.findViewById(R.id.measure_source_list_view);
+        mListView = rootView.findViewById(R.id.cursor_source_menu_list_view);
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_single_choice,
                 getResources().getStringArray(R.array.analog_channel));
         mListView.setAdapter(arrayAdapter);
         mListView.setOnItemClickListener(mItemClickListener);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
     }
 
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+    // Handle list view item click event.
+    private AdapterView.OnItemClickListener mItemClickListener
+            = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mPresenter.setMeasureSource(position);
+            mPresenter.setCursorSource(position);
         }
     };
 
     @Override
-    public void updateMeasureSource(int chIndex) {
+    public int getSelectedChannel() {
+        if (mListView == null) return 0;
+        return mListView.getSelectedItemPosition();
+    }
+
+    @Override
+    public void setSelectedChannel(int chIndex) {
+        if (mListView == null) return;
+
         // uncheck all items.
         for (int i = 0; i < mListView.getCount(); i++) {
-            mListView.setItemChecked(0, false);
+            mListView.setItemChecked(i, false);
         }
         mListView.setItemChecked(chIndex, true);
     }

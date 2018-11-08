@@ -20,11 +20,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hantek.ht6000api.HtMarkerView;
-import com.hantek.ht6000api.HtMarkerViewListener;
-import com.hantek.ht6000api.HtScopeViewListener;
+import com.hantek.ht6000api.HtMarkerView.HtMarkerViewListener;
+import com.hantek.ht6000api.HtScopeView.HtScopeViewListener;
+import com.hantek.ht6000api.HtScrollBar;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
@@ -52,10 +55,23 @@ public class MainFragment extends Fragment implements MainPresenter.View,
     // channel zero markers
     private HtMarkerView[] mChLevers;
     // Trigger Level Marker
-    private HtMarkerView mTriggerLevelMarker;
+    private HtMarkerView mYTriggerMarker;
+    // Horizontal trigger position marker
+    private HtMarkerView mXTriggerMarker;
     private ChQuickSettingsPop mChQuickSettingsPop; // channel quick settings popup window handler.
     private TriggerQuickSettingsPop mTriggerSettingsPop; // trigger quick settings popup window handler.
     private MediaPlayer mMediaPlayer; // use to play sound tip
+    private HtMarkerView mY1Cursor; // y1 cursor, used to measure voltage.
+    private HtMarkerView mY2Cursor; // y2 cursor, used to measure voltage.
+    private HtMarkerView mX1Cursor; // y2 cursor, used to measure voltage.
+    private HtMarkerView mX2Cursor; // y2 cursor, used to measure voltage.
+
+    /* Cursor measure result*/
+    private LinearLayout mCursorResultLayout;    // 光标测量结果
+    private TextView mCursorDeltaV;  // 光标测量结果电压或电流差
+    private TextView mCursorDeltaT;  // 光标测量结果时间差
+    private TextView mCursorFreq;    // 光标测量结果频率
+    private HtScrollBar mScrollBar;  // 横向滚动条。
 
     @Nullable
     @Override
@@ -107,7 +123,8 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         mChLevers[2] = root.findViewById(R.id.ch3LevelMarker);
         mChLevers[3] = root.findViewById(R.id.ch4LevelMarker);
 
-        mTriggerLevelMarker = root.findViewById(R.id.triggerLevelMarker);
+        mYTriggerMarker = root.findViewById(R.id.y_trigger_marker);
+        mXTriggerMarker = root.findViewById(R.id.x_trigger_marker);
 
         mScopeView = root.findViewById(R.id.scopeView);
         // Reset the range of levers after scope view position changed.
@@ -120,11 +137,30 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         });
         mScopeView.setListener(this);
 
-        // Set channel zero level marker event listener
+        mY1Cursor = root.findViewById(R.id.y1Marker);
+        mY2Cursor = root.findViewById(R.id.y2Marker);
+        mX1Cursor = root.findViewById(R.id.x1Marker);
+        mX2Cursor = root.findViewById(R.id.x2Marker);
+
+        // Cursor measure result.
+        mCursorResultLayout = root.findViewById(R.id.cursor_measure_result_layout);
+        mCursorDeltaV = root.findViewById(R.id.cursor_measure_delta_voltage);
+        mCursorDeltaT = root.findViewById(R.id.cursor_measure_delta_time);
+        mCursorFreq = root.findViewById(R.id.cursor_measure_freq);
+
+        mScrollBar = root.findViewById(R.id.scrollBar);
+
+
+        // Set markers event listener
         for (HtMarkerView marker: mChLevers) {
-            marker.setListener(markerViewListener);
+            marker.setListener(mMarkerViewListener);
         }
-        mTriggerLevelMarker.setListener(markerViewListener);
+        mYTriggerMarker.setListener(mMarkerViewListener);
+        mXTriggerMarker.setListener(mMarkerViewListener);
+        mY1Cursor.setListener(mMarkerViewListener);
+        mY2Cursor.setListener(mMarkerViewListener);
+        mX1Cursor.setListener(mMarkerViewListener);
+        mX2Cursor.setListener(mMarkerViewListener);
     }
 
     // Channel quick settings popup window message listener.
@@ -161,48 +197,28 @@ public class MainFragment extends Fragment implements MainPresenter.View,
             };
 
     // marker event listener.
-    private HtMarkerViewListener markerViewListener = new HtMarkerViewListener() {
+    private HtMarkerViewListener mMarkerViewListener = new HtMarkerViewListener() {
 
         // single tap event
         @Override
         public void onMarkerSingleTapped(View view) {
 
-            int chIndex = 0;
-            boolean isChSettings = true;
-
             switch (view.getId()) {
                 case R.id.ch1LevelMarker:
-                    chIndex = 0;
+                    popChannelQuickSettings(0, view);
                     break;
                 case R.id.ch2LevelMarker:
-                    chIndex = 1;
+                    popChannelQuickSettings(1, view);
                     break;
                 case R.id.ch3LevelMarker:
-                    chIndex = 2;
+                    popChannelQuickSettings(2, view);
                     break;
                 case R.id.ch4LevelMarker:
-                    chIndex = 3;
+                    popChannelQuickSettings(3, view);
                     break;
-                case R.id.triggerLevelMarker:
-                    isChSettings = false;
+                case R.id.y_trigger_marker:
+                    popTriggerQuickSettings(view);
                     break;
-            }
-
-            // popup window according to button clicked
-            if (isChSettings) {
-                if (mChQuickSettingsPop!=null && mChQuickSettingsPop.isShowing()) return;
-
-                mChQuickSettingsPop = new ChQuickSettingsPop(view, mContext, chIndex,
-                        mPresenter.getCoupling(chIndex), mPresenter.getAttenuationFactor(chIndex));
-                mChQuickSettingsPop.show();
-                mChQuickSettingsPop.setListener(mChQuickSettingsListener);
-            } else {
-                mTriggerSettingsPop = new TriggerQuickSettingsPop(view, mContext,
-                        mPresenter.getTriggerSweep(),
-                        mPresenter.getTriggerSource(),
-                        mPresenter.getTriggerSlope());
-                mTriggerSettingsPop.show();
-                mTriggerSettingsPop.setListener(mTriggerSettingsPopListener);
             }
         }
 
@@ -222,11 +238,11 @@ public class MainFragment extends Fragment implements MainPresenter.View,
                 case R.id.ch4LevelMarker:
                     mPresenter.centerChannelLevel(3);
                     break;
-            }
-
-            switch (view.getId()) {
-                case R.id.triggerLevelMarker:
+                case R.id.y_trigger_marker:
                     mPresenter.centerTriggerLevel();
+                    break;
+                case R.id.x_trigger_marker:
+                    mPresenter.centerTriggerXPos();
                     break;
             }
         }
@@ -247,12 +263,53 @@ public class MainFragment extends Fragment implements MainPresenter.View,
                 case R.id.ch4LevelMarker:
                     mPresenter.handleChZeroMarkerDragEnded(3, position);
                     break;
-                case R.id.triggerLevelMarker:
+                case R.id.y_trigger_marker:
                     mPresenter.changeTriggerLevelPos(position);
+                    break;
+                case R.id.x_trigger_marker:
+                    mPresenter.changeTriggerXPos(position);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMoving(View view) {
+            switch (view.getId()) {
+                case R.id.y1Marker:
+                    mPresenter.updateCursorY1();
+                    mPresenter.updateCursorMeasureResult();
+                    break;
+                case R.id.y2Marker:
+                    mPresenter.updateCursorY2();
+                    mPresenter.updateCursorMeasureResult();
+                    break;
+                case R.id.x1Marker:
+                case R.id.x2Marker:
+                    mPresenter.updateCursorMeasureResult();
                     break;
             }
         }
     };
+
+    // Popup channel quick settings.
+    private void popChannelQuickSettings(int chIndex, View marker) {
+        if (mChQuickSettingsPop!=null && mChQuickSettingsPop.isShowing()) return;
+
+        mChQuickSettingsPop = new ChQuickSettingsPop(marker, mContext, chIndex,
+                mPresenter.getCoupling(chIndex), mPresenter.getAttenuationFactor(chIndex));
+        mChQuickSettingsPop.show();
+        mChQuickSettingsPop.setListener(mChQuickSettingsListener);
+    }
+
+    // Popup trigger quick settings.
+    private void popTriggerQuickSettings(View marker) {
+        mTriggerSettingsPop = new TriggerQuickSettingsPop(marker, mContext,
+                mPresenter.getTriggerSweep(),
+                mPresenter.getTriggerSource(),
+                mPresenter.getTriggerSlope());
+        mTriggerSettingsPop.show();
+        mTriggerSettingsPop.setListener(mTriggerSettingsPopListener);
+    }
 
     // Set the range of the levers movement and converted range.
     private void updateLeversRange() {
@@ -263,15 +320,38 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         // the converted vale when marker moved to bottom
         int maxRangeValue = getResources().getInteger(R.integer.sample_min);
 
+        // 横向标识符移动范围
+        float xMinRange = mScopeView.getLeft();
+        float xMaxRange = mScopeView.getRight();
+
         for (HtMarkerView marker: mChLevers) {
             marker.setRange(minRange, maxRange);
             marker.setConvertRange(minRangeValue, maxRangeValue);
         }
 
-        mTriggerLevelMarker.setRange(minRange, maxRange);
-        mTriggerLevelMarker.setConvertRange(minRangeValue, maxRangeValue);
+        mYTriggerMarker.setRange(minRange, maxRange);
+        mYTriggerMarker.setConvertRange(minRangeValue, maxRangeValue);
+        mXTriggerMarker.setRange(xMinRange, xMaxRange);
+        // [0,100] 是水平触发的范围
+        // 这里可以随便写，设置改变后会更新成正确的值。
+        mXTriggerMarker.setConvertRange(0, 100);
+
+        mY1Cursor.setRange(minRange, maxRange);
+        mY1Cursor.setConvertRange(minRangeValue, maxRangeValue);
+        mY2Cursor.setRange(minRange, maxRange);
+        mY2Cursor.setConvertRange(minRangeValue, maxRangeValue);
+        mX1Cursor.setRange(xMinRange, xMaxRange);
+        mX1Cursor.setConvertRange(100, 0);
+        mX2Cursor.setRange(xMinRange, xMaxRange);
+        mX2Cursor.setConvertRange(100, 0);
+
+        // 设置虚线的长度，坐标系是标识符视图坐标系
+        mY1Cursor.setDashLength(mScopeView.getWidth());
+        mY2Cursor.setDashLength(mScopeView.getWidth());
+        mX1Cursor.setDashLength(mScopeView.getHeight());
+        mX2Cursor.setDashLength(mScopeView.getHeight());
     }
-    //endregion
+    //endregion Help Methods
 
     //region MVP view methods
 
@@ -355,13 +435,132 @@ public class MainFragment extends Fragment implements MainPresenter.View,
     }
 
     @Override
+    public void updateCursorVisibility(final boolean cursorMeasureEnabled) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int visibility;
+
+                if (cursorMeasureEnabled) {
+                    visibility = View.VISIBLE;
+                } else {
+                    visibility = View.INVISIBLE;
+                }
+
+                mY1Cursor.setVisibility(visibility);
+                mY2Cursor.setVisibility(visibility);
+                mX1Cursor.setVisibility(visibility);
+                mX2Cursor.setVisibility(visibility);
+                mCursorResultLayout.setVisibility(visibility);
+            }
+        });
+    }
+
+    @Override
+    public void updateCursorResultDeltaV(String result) {
+        mCursorDeltaV.setText(result);
+
+    }
+
+    @Override
+    public void updateCursorResultDeltaTime(String time) {
+        mCursorDeltaT.setText(time);
+    }
+
+    @Override
+    public void updateCursorResultFreq(String freq) {
+        mCursorFreq.setText(freq);
+    }
+
+    @Override
+    public void updateY1Result(String voltage) {
+        mY1Cursor.setIndicatorText(voltage);
+    }
+
+    @Override
+    public void updateY2Result(String voltage) {
+        mY2Cursor.setIndicatorText(voltage);
+    }
+
+    @Override
+    public void updateXTriggerMarker(final float min, final float max, final int pos) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // 放在这里似乎不对，因为没有必要设置改变就更新范围，
+                // 但是放到 updateLeversRange() 也不对，因为程序启动时，设备为空`
+                mXTriggerMarker.setConvertRange(min, max);
+
+                // 更新位置
+                mXTriggerMarker.setPosition(pos);
+            }
+        });
+    }
+
+    @Override
+    public float getViewPortRightRelativePos() {
+        return mScopeView.getViewPortRightRelativePos();
+    }
+
+    @Override
+    public float getViewPortLeftRelativePos() {
+        return mScopeView.getViewPortLeftRelativePos();
+    }
+
+    @Override
+    public void centerViewPort() {
+        mScopeView.centerViewPort();
+    }
+
+    @Override
+    public int getY1Position() {
+        return mY1Cursor.getPosition();
+    }
+
+    @Override
+    public int getY2Position() {
+        return mY2Cursor.getPosition();
+    }
+
+    @Override
+    public int getX1Position() {
+        return mX1Cursor.getPosition();
+    }
+
+    @Override
+    public int getX2Position() {
+        return mX2Cursor.getPosition();
+    }
+
+    @Override
+    public float getViewPortRelativePos() {
+        return mScopeView.getViewPortRelativePos();
+    }
+
+    @Override
+    public void setTriggerThumbPos(final float pos) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mScrollBar.setThumbPos(pos);
+            }
+        });
+    }
+
+    @Override
     public void promptLargestVoltsPerDiv() {
-        Toast.makeText(getContext(), getResources().getString(R.string.largest_volts_div), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getString(R.string.largest_volts_div),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void promptSmallestVoltsPerDiv() {
-        Toast.makeText(getContext(), getResources().getString(R.string.smallest_volts_div), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getString(R.string.smallest_volts_div),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -370,7 +569,7 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTriggerLevelMarker.setPosition(triggerLevelPos);
+                mYTriggerMarker.setPosition(triggerLevelPos);
             }
         });
     }
@@ -381,10 +580,10 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if ((mTriggerLevelMarker.getVisibility() != View.VISIBLE) && visible) {
-                    mTriggerLevelMarker.setVisibility(View.VISIBLE);
-                } else if (mTriggerLevelMarker.getVisibility() != View.INVISIBLE && !visible) {
-                    mTriggerLevelMarker.setVisibility(View.INVISIBLE);
+                if ((mYTriggerMarker.getVisibility() != View.VISIBLE) && visible) {
+                    mYTriggerMarker.setVisibility(View.VISIBLE);
+                } else if (mYTriggerMarker.getVisibility() != View.INVISIBLE && !visible) {
+                    mYTriggerMarker.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -415,7 +614,7 @@ public class MainFragment extends Fragment implements MainPresenter.View,
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mTriggerLevelMarker.setMarkerColor(finalColor);
+                    mYTriggerMarker.setMarkerColor(finalColor);
                 }
             });
         }
@@ -542,6 +741,13 @@ public class MainFragment extends Fragment implements MainPresenter.View,
         } else {
             mPresenter.increaseVoltsPerDiv();
         }
+    }
+
+    @Override
+    public void onHorizontalScroll(float viewPortPos) {
+        // To sync the horizontal trigger marker position
+        // To sync the scroll bar thumb position.
+        mPresenter.syncWithView();
     }
     //endregion Handle gesture
 }

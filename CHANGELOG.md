@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [0.7.0] - 2018-11-8
+
+### Added
+
+- Horizontal trigger
+- Cursor measure
+- About menu
+
 ## [0.6.0] - 2018-9-26
 
 ### Added

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--The main view layout. It include zero level markers and waveform view.-->
+<!--clipChildren to let cursor marker draw out side of itself.-->
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#333333">
+    android:background="#333333"
+    android:clipChildren="false">
 
     <!--htMarkerType: arrow direction-->
     <!--htMarkerColor: marker color-->
@@ -64,6 +66,29 @@
         app:htMarkerTitle="4"
         app:htDrawCoupling="true" />
 
+    <!--Trigger horizontal scroll bar-->
+    <com.hantek.ht6000api.HtScrollBar
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:id="@+id/scrollBar"
+        android:background="#222222"
+        app:layout_constraintStart_toStartOf="@+id/scopeView"
+        app:layout_constraintEnd_toEndOf="@+id/scopeView"
+        app:barColor="#494949"/>
+
+    <!--Horizontal trigger marker-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:id="@+id/x_trigger_marker"
+        app:htMarkerRatio="2.0"
+        app:htMarkerTitle="T"
+        app:htMarkerType="htMarkerTypeDown"
+        app:htMarkerTextOffset="8"
+        app:htMarkerColor="@color/colorCha"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!--Waveform view-->
     <!--drawSelectedChBk：whether to draw selected channel background-->
     <com.hantek.ht6000api.HtScopeView
@@ -73,7 +98,7 @@
         android:layout_marginBottom="50dp"
         android:layout_marginEnd="88dp"
         android:layout_marginStart="88dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="70dp"
         android:background="#FF292F30"
         app:crossColor="#FFA1A39D"
         app:largeColor="#FF555753"
@@ -93,7 +118,7 @@
 
     <!--Trigger Level Marker-->
     <com.hantek.ht6000api.HtMarkerView
-        android:id="@+id/triggerLevelMarker"
+        android:id="@+id/y_trigger_marker"
         android:layout_width="@dimen/zero_level_marker_width"
         android:layout_height="@dimen/zero_level_marker_height"
         app:htMarkerColor="@color/colorCha"
@@ -101,5 +126,147 @@
         app:htMarkerType="htMarkerTypeLeft"
         app:htMarkerTitle="T"
         app:layout_constraintStart_toEndOf="@id/scopeView" />
+
+    <!--Cursor measure marker Y1, used with Y2 to measure voltage-->
+    <!--Can't replace "gone" with "invisible", otherwise cursor result will not correct after first enabled cursor-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/y1Marker"
+        android:layout_marginTop="128dp"
+        app:htMarkerColor="@color/cursorMeasureColor"
+        app:htMarkerRatio="2.0"
+        app:htMarkerType="htMarkerTypeLeft"
+        app:htMarkerTitle="Y1"
+        app:htMarkerDashEnabled="true"
+        app:htMarkerTextOffset="8"
+        app:htMarkerTextColor="@android:color/black"
+        app:htMarkerIndicatorEnabled="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/scopeView"
+        android:visibility="invisible" />
+
+    <!--Cursor measure marker Y2, used with Y1 to measure voltage-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/y2Marker"
+        android:layout_marginTop="256dp"
+        app:htMarkerColor="@color/cursorMeasureColor"
+        app:htMarkerRatio="2.0"
+        app:htMarkerType="htMarkerTypeLeft"
+        app:htMarkerTitle="Y2"
+        app:htMarkerDashEnabled="true"
+        app:htMarkerTextOffset="8"
+        app:htMarkerTextColor="@android:color/black"
+        app:htMarkerIndicatorEnabled="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/scopeView"
+        android:visibility="invisible" />
+
+    <!--Cursor measure marker X1, used with X2 to measure time-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/x1Marker"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="128dp"
+        app:htMarkerColor="@color/cursorMeasureColor"
+        app:htMarkerDashEnabled="true"
+        app:htMarkerRatio="2.0"
+        app:htMarkerTitle="X1"
+        app:htMarkerType="htMarkerTypeUp"
+        app:htMarkerTextOffset="8"
+        app:htMarkerTextColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible" />
+
+    <!--Cursor measure marker X2, used with X1 to measure time-->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/x2Marker"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="256dp"
+        app:htMarkerColor="@color/cursorMeasureColor"
+        app:htMarkerDashEnabled="true"
+        app:htMarkerRatio="2.0"
+        app:htMarkerTitle="X2"
+        app:htMarkerType="htMarkerTypeUp"
+        app:htMarkerTextOffset="8"
+        app:htMarkerTextColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible" />
+
+    <!--Show cursor measure result.-->
+    <LinearLayout
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="100dp"
+        android:id="@+id/cursor_measure_result_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/cursor_result_bg"
+        android:visibility="invisible">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text ="@string/cursor_delta_v"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cursor_measure_delta_voltage"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="@string/cursor_delta_time"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cursor_measure_delta_time"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="@string/cursor_freq"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cursor_measure_freq"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

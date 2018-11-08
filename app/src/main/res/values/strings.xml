@@ -75,4 +75,25 @@
     <string name="self_cali_real_device">Self-calibration can only be performed  after connecting the real device.</string>
     <string name="self_cali_performing">Self-calibration is in progress… Please wait</string>
     <string name="self_cali_stop">Stop</string>
+    <string name="cursor_delta_v">ΔV:</string>
+    <string name="cursor_delta_time">ΔT:</string>
+    <string name="cursor_freq">F:</string>
+
+    <!--Save channel data dialog-->
+    <string name="save_data_dialog_channel_choose">Select the channel to save</string>
+    <string name="save_data_fail">Save data FAILED.</string>
+    <string name="save_data_ok">File stored at: </string>
+
+    <!--Load channel data dialog-->
+    <string name="load_data_dialog_select_file">Select the file to open</string>
+
+    <!--Dialog-->
+    <string name="dialog_yes_button">OK</string>
+    <string name="dialog_no_button">Cancel</string>
+
+    <!-- About Menu -->
+    <string name="about_menu_app">APP</string>
+    <string name="about_menu_fpga">FPGA</string>
+    <string name="about_menu_driver">Driver</string>
+    <string name="about_menu_sn">Product SN</string>
 </resources>

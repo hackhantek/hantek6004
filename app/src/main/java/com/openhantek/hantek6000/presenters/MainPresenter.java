@@ -1,6 +1,9 @@
 package com.openhantek.hantek6000.presenters;
 
+import android.util.Log;
+
 import com.hantek.ht6000api.HantekDeviceListener;
+import com.hantek.ht6000api.HantekSdk;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
@@ -44,7 +47,7 @@ public class MainPresenter {
 
         @Override
         public void onScopeSettingsChanged(){
-            syncWithUi();
+            syncWithView();
         }
 
         @Override
@@ -71,7 +74,7 @@ public class MainPresenter {
     /**
      * Synchronize mvp view with model status.
      */
-    private void syncWithUi() {
+    public void syncWithView() {
 
         for (int i = 0; i < mDataSource.getAnalogChannelCount(); i++) {
             // sync channel zero level position.
@@ -88,6 +91,20 @@ public class MainPresenter {
 
         // trigger marker color
         mView.updateTriggerLevelColor(mDataSource.getTriggerSource());
+
+        mView.updateCursorVisibility(mDataSource.isCursorMeasureEnabled());
+        updateCursorMeasureResult();
+
+        // Set the trigger scroll thumb position when app started
+        float vpPos = mView.getViewPortRelativePos();
+        mView.setTriggerThumbPos(vpPos);
+
+        /* update horizontal trigger marker */
+        int xPos = HantekSdk.getTriggerXPos();
+        // 100: 水平触发范围[0,100]
+        float xTriggerMax = mView.getViewPortRightRelativePos() * 100;
+        float xTriggerMin = mView.getViewPortLeftRelativePos() * 100;
+        mView.updateXTriggerMarker(xTriggerMin, xTriggerMax, xPos);
     }
     //endregion Helper methods
 
@@ -321,6 +338,64 @@ public class MainPresenter {
         mDataSource.increaseVoltsPerDiv();
     }
 
+    /**
+     * Update Y1 cursor result. It show the voltage difference to the channel zero level.
+     */
+    public void updateCursorY1() {
+        int position = mView.getY1Position();
+        String voltage = HantekSdk.getVoltageOrAmpereStringAtPosition(position);
+        mView.updateY1Result(voltage);
+    }
+
+    /**
+     * Update Y2 cursor result. It show the voltage difference to the channel zero level.
+     */
+    public void updateCursorY2() {
+        int position = mView.getX1Position();
+        String voltage = HantekSdk.getVoltageOrAmpereStringAtPosition(position);
+        mView.updateY2Result(voltage);
+    }
+
+    /**
+     * Update cursor measure result.
+     */
+    public void updateCursorMeasureResult() {
+        if (!HantekSdk.isCursorEnabled()) return;
+
+        /* Update voltage */
+        // the voltage delta between two cursors to be positive.
+        int delta = Math.abs(mView.getY1Position() - mView.getY2Position());
+        String voltage = HantekSdk.getVoltageOrAmpereStringOfDelta(delta);
+        mView.updateCursorResultDeltaV(voltage);
+
+        /* Update time delta and frequency */
+        delta = mView.getX1Position() - mView.getX2Position();
+        String time = HantekSdk.getTimeStringOfDelta(delta);
+        mView.updateCursorResultDeltaTime(time);
+        String freq = HantekSdk.getFrequencyStringOfDelta(delta);
+        mView.updateCursorResultFreq(freq);
+    }
+
+    /**
+     * 设置水平触发位置。
+     * @param position 想要设置的水平触发位置
+     */
+    public void changeTriggerXPos(int position) {
+        HantekSdk.setTriggerXPos(position);
+    }
+
+
+    /**
+     * Set horizontal trigger position to center. (设置水平触发位置和视口位置到中间)。
+     */
+    public void centerTriggerXPos() {
+        // 设置视口位置到中间
+        mView.centerViewPort();
+
+        // 设置水平触发位置在中间。水平触发位置范围[0,100], 50 在中间
+        changeTriggerXPos(50);
+    }
+
     //endregion Presenter Method
 
     public interface View {
@@ -386,5 +461,87 @@ public class MainPresenter {
          * Play a sound, let user know single triggered.
          */
         void playSingleCaptureSound();
+
+        /**
+         * UI should update cursor visibility when this method is called.
+         * @param cursorMeasureEnabled whether cursor measure is enabled.
+         */
+        void updateCursorVisibility(boolean cursorMeasureEnabled);
+
+        /**
+         * UI should update cursor result delta voltage after this method is called.
+         * @param voltage the delta voltage between the Y1 and Y2 cursor.
+         */
+        void updateCursorResultDeltaV(String voltage);
+
+        /**
+         * UI should update cursor result delta time after this method is called.
+         * @param time the delta voltage between the X1 and X2 cursor.
+         */
+        void updateCursorResultDeltaTime(String time);
+
+        /**
+         * UI should update cursor result frequency after this method is called.
+         * @param freq the frequency. It assume it is a full cycle signal between
+         *             the X1 and X2 cursor.
+         */
+        void updateCursorResultFreq(String freq);
+
+        /**
+         * UI should update Y1 cursor indicator result text.
+         * @param voltage the delta voltage between the cursor and the channel zero level.
+         */
+        void updateY1Result(String voltage);
+
+        /**
+         * UI should update Y2 cursor indicator result text.
+         * @param voltage the delta voltage between the cursor and the channel zero level.
+         */
+        void updateY2Result(String voltage);
+
+        int getY1Position();
+
+        int getY2Position();
+
+        int getX1Position();
+
+        int getX2Position();
+
+        /**
+         * Get view port position.
+         * @return range is [0.0, 1.0].
+         */
+        float getViewPortRelativePos();
+
+        /**
+         * Set horizontal trigger thumb position.
+         * @param pos range is [0.0, 1.0]
+         */
+        void setTriggerThumbPos(float pos);
+
+        /**
+         * 更新触发标识符
+         * @param xTriggerMin 触发表示符调节范围下限
+         * @param xTriggerMax 触发标识符调节范围上限
+         * @param triggerXPos 当前水平触发位置
+         */
+        void updateXTriggerMarker(float xTriggerMin, float xTriggerMax, int triggerXPos);
+
+        /**
+         * 获取水平触发触发标识符设置范围上限。
+         * @return 水平触发触发标识符设置范围上限
+         */
+        float getViewPortRightRelativePos();
+
+        /**
+         * 获取水平触发触发标识符设置范围下限。
+         * @return 水平触发触发标识符设置范围下限
+         */
+        float getViewPortLeftRelativePos();
+
+        /**
+         * 调整视口位置至中间(Set view port position to center).
+         */
+        void centerViewPort();
     }
 }

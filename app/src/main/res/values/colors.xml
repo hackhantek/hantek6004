@@ -17,4 +17,7 @@
 
     <!--PopupWindow Background-->
     <color name="colorPopup">#494F50</color>
+
+    <!--Cursor Measure Marker Color-->
+    <color name="cursorMeasureColor">#FF808080</color>
 </resources>

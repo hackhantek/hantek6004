@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Main menu content-->
+    <!--for referencing string in a string array in xml -->
+    <string name="cursor">Cursor</string>
     <string-array name="menu_main">
+        <item>File</item>
         <item>Measure</item>
+        <item>@string/cursor</item>
         <item>Tools</item>
         <item>About</item>
+    </string-array>
+
+    <!--File menu content-->
+    <string-array name="menu_file">
+        <item>Save Data</item>
+        <item>Load Data</item>
     </string-array>
     <!--Measure menu content-->
     <string-array name="menu_measure">
@@ -13,8 +23,12 @@
         <item>Vertical</item>
         <item>Clear</item>
     </string-array>
+    <!--Cursor menu content-->
+    <string-array name="menu_cursor">
+        <item>Source</item>
+    </string-array>
     <!--Analog channel-->
-    <string-array name="anlog_channel">
+    <string-array name="analog_channel">
         <item>CH1</item>
         <item>CH2</item>
         <item>CH3</item>

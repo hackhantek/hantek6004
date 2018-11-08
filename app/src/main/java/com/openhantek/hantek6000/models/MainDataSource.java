@@ -277,4 +277,54 @@ public interface MainDataSource {
      * Start self calibration.
      */
     void startSelfCalibration();
+
+    /**
+     * Is cursor measure enabled.
+     * @return Is cursor measure enabled.
+     */
+    boolean isCursorMeasureEnabled();
+
+    /**
+     * 保存文件。Save channel data.
+     * @param chIndex The channel index to save. 0:CH1...3:CH4
+     * @return FAIL: null; SUCCESS: The absolute file path of the saved file.
+     */
+    String saveData(int chIndex);
+
+    /**
+     * Get the file names which extension is {@code ext} in APP directory.
+     * @param ext file extension
+     * @return all file names
+     */
+    String[] getFiles(String ext);
+
+    /**
+     * Load data from file.
+     * @param fileName file name
+     */
+    void loadData(String fileName);
+
+    /**
+     * Get APP version.
+     * @return APP version. null if failed to get.
+     */
+    String getAppVersion();
+
+    /**
+     * GET FPGA firmware version.
+     * @return null if failed to get.
+     */
+    String getFpgaVersion();
+
+    /**
+     * Get scope driver version.
+     * @return null if failed to get.
+     */
+    String getDriverVersion();
+
+    /**
+     * Get product serial number.
+     * @return Fail: null; Success: product sn.
+     */
+    String getProductSn();
 }

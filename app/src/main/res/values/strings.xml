@@ -6,9 +6,9 @@
     <string name="alert_dialog_no">No</string>
     <string name="alert_dialog_ok">OK</string>
 
-    <!--Ask Demo Dialog: ask if user want to load demo device-->
-    <string name="ask_demo_dialog_message">No suitable device found. Will running in demo mode.</string>
-    <string name="ask_demo_dialog_title">No Device Found</string>
+    <!--Enter Demo Dialog: notify user demo mode entered-->
+    <string name="enter_demo_dialog_title">No Device Found</string>
+    <string name="enter_demo_dialog_message">Demo mode is now running.</string>
     <string name="usb_permission_not_granted">Usb permission not granted.</string>
 
     <!--StatusBar-->
@@ -96,4 +96,26 @@
     <string name="about_menu_fpga">FPGA</string>
     <string name="about_menu_driver">Driver</string>
     <string name="about_menu_sn">Product SN</string>
+
+    <!-- Tools Menu -->
+    <string name="tools_menu_ref_button_title">REF</string>
+    <string name="tools_menu_math_button_title">MATH</string>
+
+    <!-- REF dialog -->
+    <string name="ref_dialog_voltage_per_grid_text">Volts / DIV</string>
+    <string name="ref_dialog_second_per_grid_text">Time / DIV</string>
+    <string name="ref_dialog_on_off_button_title">Open/Close</string>
+    <string name="ref_dialog_load_button_title">Load</string>
+    <string name="ref_dialog_save_button_title">Save</string>
+    <string name="ref_dialog_close_button_title">Close</string>
+
+    <!-- Channel selection dialog -->
+    <string name="channel_selection_dialog_title">Channel Selection</string>
+
+    <!-- Math channel dialog -->
+    <string name="math_dialog_source_a_text">Source A</string>
+    <string name="math_dialog_source_b_text">Source B</string>
+    <string name="math_dialog_voltage_per_grid_text">Volts / DIV</string>
+    <string name="math_dialog_operation_text">Operator</string>
+    <string name="math_dialog_on_off_button_title">Open/Close</string>
 </resources>

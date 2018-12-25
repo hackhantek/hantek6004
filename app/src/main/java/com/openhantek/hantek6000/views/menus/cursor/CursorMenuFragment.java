@@ -53,7 +53,7 @@ public class CursorMenuFragment extends Fragment implements CursorMenuPresenter.
         ListView listView = rootView.findViewById(R.id.cursor_menu_list_view);
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.menu_cursor));
+                getResources().getStringArray(R.array.cursor_menu_content));
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(mItemClickListener);
     }

@@ -3,6 +3,7 @@
 <!--顶部状态栏布局-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
@@ -39,11 +40,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/statusBarTimeBase"
         android:textColor="#AAAAAA"
         android:textSize="@dimen/statusBarTextSize"
         android:gravity="center"
-        android:layout_marginStart="8dp"/>
+        android:text="TB "
+        android:id="@+id/timebasePrefix"
+        android:layout_marginStart="8dp"
+        tools:ignore="HardcodedText" />
+
+    <!--Set background to transparent so no show the drop down arrow when clicked.-->
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/statusBarTimeBase"
+        android:background="@android:color/transparent"
+        android:entries="@array/timebase_string_array" />
 
     <!--Add empty View to let element align to right-->
     <View android:layout_width="0dp"

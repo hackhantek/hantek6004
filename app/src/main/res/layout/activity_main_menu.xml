@@ -2,9 +2,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/menu_fragment_container"
-    android:layout_width="250dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minHeight="300dp"
     android:orientation="vertical"
-    tools:context=".views.menus.MainMenuActivity" />
+    tools:context=".views.menus.MainMenuActivity" >
+
+    <!--Inner FrameLayout combines the specified height to achieve a fixed menu height-->
+    <FrameLayout
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:id="@+id/menu_fragment_container"/>
+
+</FrameLayout>

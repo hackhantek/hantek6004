@@ -1,5 +1,6 @@
 package com.openhantek.hantek6000.views;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,5 +19,19 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
 
         HantekSdk.sdkInitialize(this);
+    }
+
+    // After declared USB filter in resource file,
+    // this method will be called if Hantek scope device plugged in USB port.
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Pass intent to MainFragment
+        MainFragment mainFragment =
+                (MainFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragment);
+        if (mainFragment != null) {
+            mainFragment.onUsbIntent(intent);
+        }
     }
 }

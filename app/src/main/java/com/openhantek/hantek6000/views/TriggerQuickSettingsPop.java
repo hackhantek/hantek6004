@@ -66,30 +66,28 @@ public class TriggerQuickSettingsPop {
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(mContext).inflate(
                 R.layout.trigger_quick_settings, null);
 
-        PopupWindow popupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT,
+        mPopupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // Closes the popup window when touch outside.
         // This method was written informatively in Google's docs.
-        popupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOutsideTouchable(true);
 
         // Set focus true to make prevent touch event to below view (main layout),
         // which works like a dialog with 'cancel' property => Try it! And you will know what I mean.
-        popupWindow.setFocusable(true);
+        mPopupWindow.setFocusable(true);
 
         // mMainPop default background. Without this touch outside don't dismiss popup window.
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
        // measure contentView size
-        View contentView = popupWindow.getContentView();
+        View contentView = mPopupWindow.getContentView();
         // need to measure first, because in this time PopupWindow is nit pop, width is 0.
-        contentView.measure(makeDropDownMeasureSpec(popupWindow.getWidth()),
-                makeDropDownMeasureSpec(popupWindow.getHeight()));
+        contentView.measure(makeDropDownMeasureSpec(mPopupWindow.getWidth()),
+                makeDropDownMeasureSpec(mPopupWindow.getHeight()));
 
-        int offsetX = -popupWindow.getContentView().getMeasuredWidth();
-        int offsetY = -mTriggerView.getHeight();
         // show at the left edge of the trigger view
-        popupWindow.showAsDropDown(mTriggerView, offsetX, offsetY);
+        mPopupWindow.showAsDropDown(mTriggerView, getOffsetX(), getOffsetY());
 
         setupUi(contentView);
     }
@@ -146,38 +144,38 @@ public class TriggerQuickSettingsPop {
     private void setupInitialState() {
         switch (mSource) {
             case 0:
-                mSourceButton.setText(mContext.getResources().getString(R.string.ch1));
+                mSourceButton.setText(R.string.ch1);
                 break;
             case 1:
-                mSourceButton.setText(mContext.getResources().getString(R.string.ch2));
+                mSourceButton.setText(R.string.ch2);
                 break;
             case 2:
-                mSourceButton.setText(mContext.getResources().getString(R.string.ch3));
+                mSourceButton.setText(R.string.ch3);
                 break;
             case 3:
-                mSourceButton.setText(mContext.getResources().getString(R.string.ch4));
+                mSourceButton.setText(R.string.ch4);
                 break;
         }
 
         switch (mSlope) {
             case Rising:
-                mSlopeButton.setText(mContext.getResources().getString(R.string.trigger_slope_rising));
+                mSlopeButton.setText(R.string.trigger_slope_rising);
                 break;
             case Falling:
-                mSlopeButton.setText(mContext.getResources().getString(R.string.trigger_slope_falling));
+                mSlopeButton.setText(R.string.trigger_slope_falling);
                 break;
         }
 
         switch (mSweep) {
 
             case Auto:
-                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_auto));
+                mSweepButton.setText(R.string.trigger_sweep_auto);
                 break;
             case Normal:
-                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_normal));
+                mSweepButton.setText(R.string.trigger_sweep_normal);
                 break;
             case Single:
-                mSweepButton.setText(mContext.getResources().getString(R.string.trigger_sweep_single));
+                mSweepButton.setText(R.string.trigger_sweep_single);
                 break;
         }
     }
@@ -352,6 +350,36 @@ public class TriggerQuickSettingsPop {
             mode = View.MeasureSpec.EXACTLY;
         }
         return View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measureSpec), mode);
+    }
+
+    // Used to display the popup to the left of the trigger level marker
+    private int getOffsetX() {
+        return -mPopupWindow.getContentView().getMeasuredWidth();
+    }
+
+    // Used to display the popup to the vertical middle position of the trigger level marker
+    private int getOffsetY() {
+        return -mTriggerView.getHeight();
+    }
+
+    /**
+     * Indicate whether trigger quick settings popup window is showing on screen.
+     * @return true if the popup is showing, false otherwise
+     */
+    boolean isShowing() {
+        if (mPopupWindow == null) return false;
+        return mPopupWindow.isShowing();
+    }
+
+    /**
+     * Updates the position of the trigger quick settings popup window.
+     */
+    void update() {
+        if (mPopupWindow == null) return;
+        if (!mPopupWindow.isShowing()) return;
+
+        // Width and height can be set to -1 to update location only.
+        mPopupWindow.update(mTriggerView, getOffsetX(), getOffsetY(), -1, -1);
     }
 
     interface TriggerQuickSettingsPopListener{

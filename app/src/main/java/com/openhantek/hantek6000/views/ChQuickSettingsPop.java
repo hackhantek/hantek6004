@@ -84,51 +84,51 @@ public class ChQuickSettingsPop {
     private void syncView() {
         switch (mInputCoupling) {
             case AC:
-                mCouplingButton.setText(mContext.getResources().getString(R.string.coupling_ac));
+                mCouplingButton.setText(R.string.coupling_ac);
                 break;
             case DC:
-                mCouplingButton.setText(mContext.getResources().getString(R.string.coupling_dc));
+                mCouplingButton.setText(R.string.coupling_dc);
                 break;
             case GND:
-                mCouplingButton.setText(mContext.getResources().getString(R.string.coupling_gnd));
+                mCouplingButton.setText(R.string.coupling_gnd);
                 break;
         }
 
         switch (mAttenuationFactor) {
             case X1:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x1));
+                mProbeButton.setText(R.string.probe_x1);
                 break;
             case X10:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x10));
+                mProbeButton.setText(R.string.probe_x10);
                 break;
             case X100:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x100));
+                mProbeButton.setText(R.string.probe_x100);
                 break;
             case X1000:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x1000));
+                mProbeButton.setText(R.string.probe_x1000);
                 break;
             case X10000:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x10000));
+                mProbeButton.setText(R.string.probe_x10000);
                 break;
             case X20:
                 break;
             case X10A_CC65:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x20));
+                mProbeButton.setText(R.string.probe_x20);
                 break;
             case X100A_CC65:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x10a_cc65));
+                mProbeButton.setText(R.string.probe_x10a_cc65);
                 break;
             case X100A_CC650:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x100a_cc65));
+                mProbeButton.setText(R.string.probe_x100a_cc65);
                 break;
             case X1000A_CC650:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x100a_cc650));
+                mProbeButton.setText(R.string.probe_x100a_cc650);
                 break;
             case X100A_CC1100:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_x1000a_cc650));
+                mProbeButton.setText(R.string.probe_x1000a_cc650);
                 break;
             case X1000A_CC1100:
-                mProbeButton.setText(mContext.getResources().getString(R.string.probe_1000a_cc1100));
+                mProbeButton.setText(R.string.probe_1000a_cc1100);
                 break;
         }
     }
@@ -331,7 +331,7 @@ public class ChQuickSettingsPop {
      * Indicate whether this popup window is showing on screen.
      * @return true if the popup is showing, false otherwise
      */
-    public boolean isShowing() {
+    boolean isShowing() {
         return  (mMainPop != null ) && mMainPop.isShowing();
     }
 

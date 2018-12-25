@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 通道选择对话框 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 标题栏 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap"
+            android:text="@string/channel_selection_dialog_title" />
+
+        <!-- 分割线 -->
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividing_line_color"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin" />
+    </RelativeLayout>
+
+    <!-- 内容区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 通道选择标签 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save_data_dialog_channel_choose"
+            android:layout_margin="@dimen/default_margin" />
+
+        <!--通道单选按钮-->
+        <RadioGroup
+            android:id="@+id/ref_save_data_dialog_channel_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/ref_save_data_dialog_ch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ch1"
+                tools:ignore="HardcodedText" />
+            <RadioButton
+                android:id="@+id/ref_save_data_dialog_ch2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ch2"
+                tools:ignore="HardcodedText" />
+            <RadioButton
+                android:id="@+id/ref_save_data_dialog_ch3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ch3"
+                tools:ignore="HardcodedText" />
+            <RadioButton
+                android:id="@+id/ref_save_data_dialog_ch4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ch4"
+                tools:ignore="HardcodedText" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <!-- 按钮区域 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <Button
+            android:id="@+id/ref_save_data_dialog_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/ref_save_data_dialog_ok_button"
+            android:text="@string/dialog_no_button" />
+
+        <Button
+            android:id="@+id/ref_save_data_dialog_ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/dialog_yes_button" />
+    </RelativeLayout>
+</LinearLayout>

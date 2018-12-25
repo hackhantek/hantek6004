@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Math channel dialog -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Title -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:text="@string/tools_menu_math_button_title" />
+
+        <!-- Dividing line -->
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividing_line_color"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin" />
+    </RelativeLayout>
+
+    <!-- Context area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dialog_margin"
+        android:paddingStart="@dimen/default_margin">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <TextView
+                    android:id="@+id/math_dialog_source_a_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/math_dialog_source_a_text"
+                    android:textSize="@dimen/dialog_textView_size"
+                    android:layout_margin="@dimen/default_margin" />
+
+                <Spinner
+                    android:id="@+id/math_dialog_source_a_spinner"
+                    android:layout_width="@dimen/dialog_spinner_width"
+                    android:layout_height="@dimen/dialog_spinner_height"
+                    android:entries="@array/math_source"
+                    android:layout_margin="@dimen/default_margin" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/math_dialog_source_b_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/math_dialog_source_b_text"
+                    android:textSize="@dimen/dialog_textView_size" />
+
+                <Spinner
+                    android:id="@+id/math_dialog_source_b_spinner"
+                    android:layout_width="@dimen/dialog_spinner_width"
+                    android:layout_height="@dimen/dialog_spinner_height"
+                    android:layout_margin="@dimen/default_margin"
+                    android:entries="@array/math_source" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/math_dialog_voltage_per_grid_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/math_dialog_voltage_per_grid_text"
+                    android:textSize="@dimen/dialog_textView_size" />
+
+                <Spinner
+                    android:id="@+id/math_dialog_voltage_spinner"
+                    android:layout_width="@dimen/dialog_spinner_width"
+                    android:layout_height="@dimen/dialog_spinner_height"
+                    android:layout_margin="@dimen/default_margin"
+                    android:entries="@array/VoltsDiv" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/math_dialog_operation_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/math_dialog_operation_text"
+                    android:textSize="@dimen/dialog_textView_size"
+                    android:layout_margin="@dimen/default_margin" />
+
+                <Spinner
+                    android:id="@+id/math_dialog_operation_spinner"
+                    android:layout_width="@dimen/dialog_spinner_width"
+                    android:layout_height="@dimen/dialog_spinner_height"
+                    android:layout_margin="@dimen/default_margin"
+                    android:entries="@array/math_operations" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/default_margin">
+            <CheckBox
+                android:id="@+id/math_dialog_on_off_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/math_dialog_on_off_button_title" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

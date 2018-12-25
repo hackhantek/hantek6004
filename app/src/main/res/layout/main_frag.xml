@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--The main view layout. It include zero level markers and waveform view.-->
-<!--clipChildren to let cursor marker draw out side of itself.-->
+<!-- The main view layout. It include zero level markers and waveform view. -->
+<!-- clipChildren to let cursor marker draw out side of itself. -->
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -10,16 +10,15 @@
     android:background="#333333"
     android:clipChildren="false">
 
-    <!--htMarkerType: arrow direction-->
-    <!--htMarkerColor: marker color-->
-    <!--htMarkerRatio: the ratio of the length or height of the rectangle to the height of the triangle-->
-    <!--htMarkerTitle：marker title-->
-    <!--CH1 zero level marker-->
+    <!-- htMarkerType: arrow direction -->
+    <!-- htMarkerColor: marker color -->
+    <!-- htMarkerRatio: the ratio of the length or height of the rectangle to the height of the triangle -->
+    <!-- htMarkerTitle：marker title -->
+    <!-- CH1 zero level marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/ch1LevelMarker"
         android:layout_width="@dimen/zero_level_marker_width"
         android:layout_height="@dimen/zero_level_marker_height"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:htMarkerColor="@color/colorCha"
         app:htMarkerRatio="2.8"
@@ -27,12 +26,11 @@
         app:htMarkerTitle="1"
         app:htDrawCoupling="true" />
 
-    <!--CH2 zero level position marker-->
+    <!-- CH2 zero level position marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/ch2LevelMarker"
         android:layout_width="@dimen/zero_level_marker_width"
         android:layout_height="@dimen/zero_level_marker_height"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:htMarkerColor="@color/colorChb"
         app:htMarkerRatio="2.8"
@@ -40,12 +38,11 @@
         app:htMarkerTitle="2"
         app:htDrawCoupling="true" />
 
-    <!--CH3 zero level position marker-->
+    <!-- CH3 zero level position marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/ch3LevelMarker"
         android:layout_width="@dimen/zero_level_marker_width"
         android:layout_height="@dimen/zero_level_marker_height"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:htMarkerColor="@color/colorChc"
         app:htMarkerRatio="2.8"
@@ -53,12 +50,11 @@
         app:htMarkerTitle="3"
         app:htDrawCoupling="true" />
 
-    <!--CH4 zero level position marker-->
+    <!-- CH4 zero level position marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/ch4LevelMarker"
         android:layout_width="@dimen/zero_level_marker_width"
         android:layout_height="@dimen/zero_level_marker_height"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:htMarkerColor="@color/colorChd"
         app:htMarkerRatio="2.8"
@@ -66,7 +62,35 @@
         app:htMarkerTitle="4"
         app:htDrawCoupling="true" />
 
-    <!--Trigger horizontal scroll bar-->
+    <!-- ref zero level position marker -->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/refLevelMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorRef"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="R"
+        app:htMarkerTitleColor="@color/colorRefTitle"
+        app:htDrawCoupling="false"
+        android:visibility="invisible" />
+
+    <!-- math zero level position marker -->
+    <com.hantek.ht6000api.HtMarkerView
+        android:id="@+id/mathMarker"
+        android:layout_width="@dimen/zero_level_marker_width"
+        android:layout_height="@dimen/zero_level_marker_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:htMarkerColor="@color/colorMath"
+        app:htMarkerRatio="2.8"
+        app:htMarkerType="htMarkerTypeRight"
+        app:htMarkerTitle="M"
+        app:htMarkerTitleColor="@color/colorRefTitle"
+        app:htDrawCoupling="false"
+        android:visibility="invisible" />
+
+    <!-- Trigger horizontal scroll bar -->
     <com.hantek.ht6000api.HtScrollBar
         android:layout_width="0dp"
         android:layout_height="20dp"
@@ -76,7 +100,7 @@
         app:layout_constraintEnd_toEndOf="@+id/scopeView"
         app:barColor="#494949"/>
 
-    <!--Horizontal trigger marker-->
+    <!-- Horizontal trigger marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:layout_width="30dp"
         android:layout_height="50dp"
@@ -89,15 +113,15 @@
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--Waveform view-->
-    <!--drawSelectedChBk：whether to draw selected channel background-->
+    <!-- Waveform view -->
+    <!-- drawSelectedChBk：whether to draw selected channel background -->
     <com.hantek.ht6000api.HtScopeView
         android:id="@+id/scopeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginStart="88dp"
+        android:layout_marginEnd="@dimen/zero_level_marker_width"
+        android:layout_marginStart="@dimen/zero_level_marker_width"
         android:layout_marginTop="70dp"
         android:background="#FF292F30"
         app:crossColor="#FFA1A39D"
@@ -116,7 +140,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!--Trigger Level Marker-->
+    <!-- Trigger Level Marker -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/y_trigger_marker"
         android:layout_width="@dimen/zero_level_marker_width"
@@ -127,8 +151,8 @@
         app:htMarkerTitle="T"
         app:layout_constraintStart_toEndOf="@id/scopeView" />
 
-    <!--Cursor measure marker Y1, used with Y2 to measure voltage-->
-    <!--Can't replace "gone" with "invisible", otherwise cursor result will not correct after first enabled cursor-->
+    <!-- Cursor measure marker Y1, used with Y2 to measure voltage -->
+    <!-- Can't replace "gone" with "invisible", otherwise cursor result will not correct after first enabled cursor -->
     <com.hantek.ht6000api.HtMarkerView
         android:layout_width="50dp"
         android:layout_height="30dp"
@@ -146,7 +170,7 @@
         app:layout_constraintStart_toEndOf="@id/scopeView"
         android:visibility="invisible" />
 
-    <!--Cursor measure marker Y2, used with Y1 to measure voltage-->
+    <!-- Cursor measure marker Y2, used with Y1 to measure voltage -->
     <com.hantek.ht6000api.HtMarkerView
         android:layout_width="50dp"
         android:layout_height="30dp"
@@ -164,7 +188,7 @@
         app:layout_constraintStart_toEndOf="@id/scopeView"
         android:visibility="invisible" />
 
-    <!--Cursor measure marker X1, used with X2 to measure time-->
+    <!-- Cursor measure marker X1, used with X2 to measure time -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/x1Marker"
         android:layout_width="30dp"
@@ -181,7 +205,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="invisible" />
 
-    <!--Cursor measure marker X2, used with X1 to measure time-->
+    <!-- Cursor measure marker X2, used with X1 to measure time -->
     <com.hantek.ht6000api.HtMarkerView
         android:id="@+id/x2Marker"
         android:layout_width="30dp"
@@ -198,7 +222,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="invisible" />
 
-    <!--Show cursor measure result.-->
+    <!-- Show cursor measure result. -->
     <LinearLayout
         android:layout_width="180dp"
         android:layout_height="wrap_content"

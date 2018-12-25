@@ -36,6 +36,20 @@ public class ToolsMenuPresenter {
     }
 
     /**
+     * This method is called after user clicked ref in menu.
+     */
+    public void handleRefClick(){
+        mView.showRefDialog();
+    }
+
+    /**
+     * This method is called after user clicked math in menu.
+     */
+    public void handleMathClick() {
+        mView.showMathDialog();
+    }
+
+    /**
      * Reset to factory setup.
      */
     public void resetToFactory() {
@@ -101,6 +115,16 @@ public class ToolsMenuPresenter {
          * Ask user whether to continue self calibration.
          */
         void askSelfCalibration();
+
+        /**
+         * Show reference waveform dialog.
+         */
+        void showRefDialog();
+
+        /**
+         * Show math channel dialog.
+         */
+        void showMathDialog();
 
         /**
          * Prompt user self-calibration can only be performed after connecting the real device.

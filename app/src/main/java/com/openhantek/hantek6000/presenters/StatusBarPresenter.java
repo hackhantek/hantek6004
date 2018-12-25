@@ -3,16 +3,14 @@ package com.openhantek.hantek6000.presenters;
 // For portability, don't depend on any Android-specific classes in this class.
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.openhantek.hantek6000.models.MainDataSource;
-import com.openhantek.hantek6000.models.MainRepository;
 
 public class StatusBarPresenter  {
     private final MainDataSource mDataSource;
     private final StatusBarPresenter.View mView;
 
-
-    public StatusBarPresenter(StatusBarPresenter.View view) {
+    public StatusBarPresenter(View view, MainDataSource dataSource) {
         mView = view;
-        mDataSource = MainRepository.getInstance();
+        mDataSource = dataSource;
         mDataSource.addDeviceListener(mHtDeviceListener);
     }
 
@@ -27,8 +25,7 @@ public class StatusBarPresenter  {
             mView.updateChannelVoltsDiv(prefix + mDataSource.getVoltsDivString(i), i);
 
             // sync time base
-            prefix = "TB ";
-            mView.updateTimeBase(prefix + mDataSource.getTimeBaseString());
+            mView.updateTimeBase(mDataSource.getTimeBase().ordinal());
 
             // sync run button status
             mView.updateRunButton(mDataSource.isRunning());
@@ -116,6 +113,14 @@ public class StatusBarPresenter  {
         mView.showMenu();
     }
 
+    /**
+     * Set timebase.
+     * @param timebaseIndex timebase index 0: 2ns ...35: 1000s
+     */
+    public void setTimebase(int timebaseIndex) {
+        mDataSource.setTimebase(timebaseIndex);
+    }
+
     public interface View {
 
         /**
@@ -134,9 +139,9 @@ public class StatusBarPresenter  {
 
         /**
          * Update time base in view.
-         * @param timebase current time base in string.
+         * @param timebaseIndex current time base index. 0:2ns 1: 5ns ...35: 1000s
          */
-        void updateTimeBase(final String timebase);
+        void updateTimeBase(final int timebaseIndex);
 
         /**
          * Update run button status.

@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.HantekSdk;
-import com.hantek.ht6000api.HtScopeView;
+import com.hantek.ht6000api.HtScopeSettings;
 import com.hantek.ht6000api.ht6000.ConnectionStatus;
 import com.openhantek.hantek6000.Utils.UsbDeviceFilter;
 
@@ -23,20 +23,30 @@ public class HtUsbManager implements HtUsbManagerInterface {
     private UsbDeviceConnection mUsbConnection;
     private UsbInterface mInterface;
 
-    public HtUsbManager(Context context) {
+    // Resource file that specifies the USB devices that we're interested in.
+    private int mUsbFilterId;
+
+    /**
+     * Constructor.
+     * @param context context
+     * @param device_filter Resource file that specifies the USB devices that we're interested in.
+     */
+    public HtUsbManager(Context context, int device_filter) {
         this.context = context;
         // TODO: Need to re-acquire after insertion
         mUsbManager = (UsbManager)context.getSystemService(Context.USB_SERVICE);
+
+        mUsbFilterId = device_filter;
     }
 
     @Override
-    public void loadDemoDevice(HantekDeviceListener mHtDeviceListener, int[] colors, Object scopeView) {
-        HantekSdk.loadDemoDevice(mHtDeviceListener, colors, (HtScopeView) scopeView);
+    public void loadDemoDevice(HantekDeviceListener mHtDeviceListener, HtScopeSettings scopeSettings) {
+        HantekSdk.loadDemoDevice(mHtDeviceListener, scopeSettings);
     }
 
     @Override
-    public void loadRealDevice(HantekDeviceListener mHtDeviceListener, int[] colors, Object scopeView) {
-        HantekSdk.loadRealDevice(mHtDeviceListener, mUsbConnection, mInterface, colors, (HtScopeView) scopeView);
+    public void loadRealDevice(HantekDeviceListener mHtDeviceListener, HtScopeSettings scopeSettings) {
+        HantekSdk.loadRealDevice(mHtDeviceListener, mUsbConnection, mInterface, scopeSettings);
         HantekSdk.setConnectionStatus(ConnectionStatus.Connected);
     }
 
@@ -107,9 +117,9 @@ public class HtUsbManager implements HtUsbManagerInterface {
     }
 
     @Override
-    public boolean isScopeDeviceExist(int device_filter) {
+    public boolean isScopeDeviceExist() {
         for (UsbDevice device: mUsbManager.getDeviceList().values()) {
-            if (isHantekDevice(device, context, device_filter)) {
+            if (isHantekDevice(device, context, mUsbFilterId)) {
                 mUsbDevice = device;
                 return true;
             }

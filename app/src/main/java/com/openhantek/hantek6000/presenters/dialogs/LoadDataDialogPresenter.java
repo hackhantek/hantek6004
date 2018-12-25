@@ -9,7 +9,6 @@ import com.openhantek.hantek6000.models.MainRepository;
 public class LoadDataDialogPresenter {
     private MainDataSource mDataSource;
     private View mView;
-
     /**
      * Constructor.
      * @param view view
@@ -21,20 +20,28 @@ public class LoadDataDialogPresenter {
 
     /**
      * Get file list which saves the channel data.
-     * @return All files which extension is csv.
+     * @param fileExt the extension of files.
+     * @return All files which extension is @fileExt.
      */
-    public String[] getFiles() {
-        return mDataSource.getFiles("csv");
+    public String[] getFiles(String fileExt) {
+        return mDataSource.getFiles(fileExt);
     }
 
     /**
      * Load file which saved the channel data.
      * @param fileName file name
+     * @param fileExt the extension of files.
      */
-    public void loadData(String fileName) {
-        mDataSource.loadData(fileName);
+    public void loadData(String fileName, String fileExt) {
+        switch (fileExt) {
+            case "csv":
+                mDataSource.loadCsvData(fileName);
+                break;
+            case "rfc":
+                mDataSource.loadRfcData(fileName);
+                break;
+        }
     }
-
 
     public interface View {
 

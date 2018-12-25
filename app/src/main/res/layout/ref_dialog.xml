@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reference waveform dialog -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Title -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap"
+            android:text="@string/tools_menu_ref_button_title" />
+
+        <!-- Dividing line -->
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividing_line_color"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin" />
+    </RelativeLayout>
+
+    <!-- Context area -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dialog_margin">
+
+        <!-- Voltage title -->
+        <TextView
+            android:id="@+id/ref_dialog_voltage_per_grid_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ref_dialog_voltage_per_grid_text"
+            android:textSize="@dimen/dialog_textView_size"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Voltage list content -->
+        <Spinner
+            android:id="@+id/ref_dialog_voltage_spinner"
+            android:layout_width="@dimen/dialog_spinner_width"
+            android:layout_height="@dimen/dialog_spinner_height"
+            android:entries="@array/VoltsDiv"
+             app:layout_constraintStart_toEndOf="@+id/ref_dialog_voltage_per_grid_text"
+            app:layout_constraintBottom_toBottomOf="@id/ref_dialog_voltage_per_grid_text"
+            app:layout_constraintTop_toTopOf="@id/ref_dialog_voltage_per_grid_text" />
+
+        <!-- Time base title -->
+        <TextView
+            android:id="@+id/ref_dialog_second_per_grid_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ref_dialog_second_per_grid_text"
+            android:textSize="@dimen/dialog_textView_size"
+            app:layout_constraintTop_toBottomOf="@id/ref_dialog_voltage_per_grid_text"
+            app:layout_constraintEnd_toEndOf="@id/ref_dialog_voltage_per_grid_text"
+            android:layout_marginTop="@dimen/dialog_margin" />
+
+        <!-- Time base list content -->
+        <Spinner
+            android:id="@+id/ref_dialog_timebase_spinner"
+            android:layout_width="@dimen/dialog_spinner_width"
+            android:layout_height="@dimen/dialog_spinner_height"
+            android:entries="@array/timebase_string_array"
+            app:layout_constraintStart_toStartOf="@+id/ref_dialog_voltage_spinner"
+            app:layout_constraintTop_toTopOf="@+id/ref_dialog_second_per_grid_text"
+            app:layout_constraintBottom_toBottomOf="@id/ref_dialog_second_per_grid_text" />
+
+        <!-- Switch check box -->
+        <CheckBox
+            android:id="@+id/ref_dialog_on_off_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ref_dialog_on_off_button_title"
+            app:layout_constraintStart_toEndOf="@+id/ref_dialog_voltage_spinner"
+            app:layout_constraintBottom_toBottomOf="@+id/ref_dialog_voltage_per_grid_text"
+            app:layout_constraintTop_toTopOf="@+id/ref_dialog_voltage_per_grid_text"
+            android:layout_marginStart="50dp" />
+
+        <!-- Load button -->
+        <Button
+            android:id="@+id/ref_dialog_load_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/ref_dialog_load_button_title"
+            app:layout_constraintStart_toStartOf="@+id/ref_dialog_on_off_checkbox"
+            app:layout_constraintBottom_toBottomOf="@+id/ref_dialog_timebase_spinner" />
+
+        <!-- Save button -->
+        <Button
+            android:id="@+id/ref_dialog_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ref_dialog_save_button_title"
+            app:layout_constraintStart_toEndOf="@+id/ref_dialog_load_button"
+            app:layout_constraintBottom_toBottomOf="@+id/ref_dialog_timebase_spinner"
+            android:layout_marginStart="@dimen/dialog_margin" />
+
+        <!-- Scroll bar -->
+        <!-- Used to control the position of the reference waveform view -->
+        <SeekBar
+            android:id="@+id/ref_dialog_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/ref_dialog_save_button" />
+
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

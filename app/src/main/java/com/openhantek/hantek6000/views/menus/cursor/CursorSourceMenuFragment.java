@@ -1,14 +1,9 @@
 package com.openhantek.hantek6000.views.menus.cursor;
 
-
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,68 +11,49 @@ import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.presenters.menus.cursor.CursorSourceMenuPresenter;
 
 /**
- * Cursor source menu.
+ * A simple {@link ListFragment} subclass to show cursor source menu.
  */
-public class CursorSourceMenuFragment extends Fragment implements CursorSourceMenuPresenter.View {
+public class CursorSourceMenuFragment extends ListFragment implements CursorSourceMenuPresenter.View {
 
     private final CursorSourceMenuPresenter mPresenter;
-    private ListView mListView;
 
     public CursorSourceMenuFragment() {
         // Required empty public constructor
         mPresenter = new CursorSourceMenuPresenter(this);
     }
 
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cursor_source_menu, container, false);
-    }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setupListView(view);
+        if (getActivity() == null) return;
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.analog_channel, android.R.layout.simple_list_item_single_choice);
+        setListAdapter(adapter);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
         // Let list view select the current source channel.
         mPresenter.syncWithView();
     }
 
-    // Setup list view.
-    private void setupListView(View rootView) {
-        if (getContext() == null) return;
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
 
-        mListView = rootView.findViewById(R.id.cursor_source_menu_list_view);
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_single_choice,
-                getResources().getStringArray(R.array.analog_channel));
-        mListView.setAdapter(arrayAdapter);
-        mListView.setOnItemClickListener(mItemClickListener);
+        mPresenter.setCursorSource(position);
     }
-
-    // Handle list view item click event.
-    private AdapterView.OnItemClickListener mItemClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mPresenter.setCursorSource(position);
-        }
-    };
 
     @Override
     public int getSelectedChannel() {
-        if (mListView == null) return 0;
-        return mListView.getSelectedItemPosition();
+        return getListView().getSelectedItemPosition();
     }
 
     @Override
     public void setSelectedChannel(int chIndex) {
-        if (mListView == null) return;
-
-        // uncheck all items.
-        for (int i = 0; i < mListView.getCount(); i++) {
-            mListView.setItemChecked(i, false);
+        // Uncheck all items.
+        for (int i = 0; i < getListView().getCount(); i++) {
+            getListView().setItemChecked(i, false);
         }
-        mListView.setItemChecked(chIndex, true);
+        getListView().setItemChecked(chIndex, true);
     }
 }

@@ -10,7 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -23,7 +26,8 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
     private StatusBarPresenter mPresenter;
     // channel on/off buttons. channels count is 4.
     private ToggleButton[] mChToggleButtons = new ToggleButton[4];
-    private TextView mTimeBase; // TimeBase text view.
+    private Spinner mTimeBaseSpinner; // to show and set timebase
+    private TextView mTimeBasePrefix; // to show "TB" before timebase
     private ToggleButton mRunButton; // run button.
     private Button mAutoButton; // auto button.
     private Button mMenuButton; // MENU button
@@ -38,7 +42,7 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
 
         setupView(root);
 
-        mPresenter = new StatusBarPresenter(this);
+        mPresenter = new StatusBarPresenter(this, Injection.provideDataSource());
 
         return root;
     }
@@ -67,7 +71,19 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         button.setOnClickListener(this);
         mChToggleButtons[3] = button;
 
-        mTimeBase = rootView.findViewById(R.id.statusBarTimeBase);
+        mTimeBaseSpinner = rootView.findViewById(R.id.statusBarTimeBase);
+        mTimeBaseSpinner.setOnItemSelectedListener(mOnTimebaseSpinnerItemSelected);
+        mTimeBasePrefix = rootView.findViewById(R.id.timebasePrefix);
+        mTimeBasePrefix.setOnClickListener(mOnTimeBasePrefixClicked);
+
+        // Use Custom Adapter to change spinner text color.
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.timebase_string_array, R.layout.timebase_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mTimeBaseSpinner.setAdapter(adapter);
 
         mRunButton = rootView.findViewById(R.id.runButton);
         mRunButton.setOnClickListener(this);
@@ -111,6 +127,31 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
         }
     }
 
+    /**
+     * Called when timebase drop down in top status bar changed.
+     */
+    private AdapterView.OnItemSelectedListener mOnTimebaseSpinnerItemSelected = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            mPresenter.setTimebase(position);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    /**
+     * To show timebase drop down when user click "TB".
+     */
+    private View.OnClickListener mOnTimeBasePrefixClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mTimeBaseSpinner.performClick();
+        }
+    };
+
     //region MVP View methods
     @Override
     public void updateChannelEnabledUi(final boolean enabled, final int i) {
@@ -145,13 +186,13 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
     }
 
     @Override
-    public void updateTimeBase(final String timeBase) {
+    public void updateTimeBase(final int timeBaseIndex) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mTimeBase.getText().toString().compareTo(timeBase) == 0) return;
-                    mTimeBase.setText(timeBase);
+                    if (mTimeBaseSpinner.getSelectedItemPosition() == timeBaseIndex) return;
+                    mTimeBaseSpinner.setSelection(timeBaseIndex);
                 }
             });
         }
@@ -193,9 +234,8 @@ public class StatusBarFragment extends Fragment implements StatusBarPresenter.Vi
 
     @Override
     public void showAutosetDialog() {
-        // 显示对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        mAutosetDialog = builder.setMessage(getResources().getString(R.string.autoset_wait)).create();
+        mAutosetDialog = builder.setMessage(R.string.autoset_wait).create();
         mAutosetDialog.setCancelable(false);
         mAutosetDialog.show();
     }

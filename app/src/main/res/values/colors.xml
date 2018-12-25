@@ -9,15 +9,25 @@
     <color name="colorChc">#FFE33E7C</color>
     <color name="colorChd">#FF4CCD4F</color>
 
-    <!--status bar invalid color-->
+    <!-- status bar invalid color -->
     <color name="status_bar_valid_color">#000000</color>
     <color name="status_bar_invalid_color">#49494A</color>
     <color name="status_bar_invalid_bk_color">#00000000</color>
     <color name="status_bar_triggered_bk_color">#FFFF00</color>
 
-    <!--PopupWindow Background-->
+    <!-- PopupWindow Background -->
     <color name="colorPopup">#494F50</color>
 
-    <!--Cursor Measure Marker Color-->
+    <!-- Cursor Measure Marker Color -->
     <color name="cursorMeasureColor">#FF808080</color>
+
+    <!-- dividing line color -->
+    <color name="dividing_line_color">#808080</color>
+
+    <!-- Reference marker color -->
+    <color name="colorRefTitle">#000000</color>
+    <color name="colorRef">#FFFFFF</color>
+
+    <!-- Math marker color -->
+    <color name="colorMath">#FF0000</color>
 </resources>

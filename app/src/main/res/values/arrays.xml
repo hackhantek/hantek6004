@@ -3,7 +3,7 @@
     <!--Main menu content-->
     <!--for referencing string in a string array in xml -->
     <string name="cursor">Cursor</string>
-    <string-array name="menu_main">
+    <string-array name="main_menu_content">
         <item>File</item>
         <item>Measure</item>
         <item>@string/cursor</item>
@@ -12,19 +12,19 @@
     </string-array>
 
     <!--File menu content-->
-    <string-array name="menu_file">
+    <string-array name="file_menu_content">
         <item>Save Data</item>
         <item>Load Data</item>
     </string-array>
     <!--Measure menu content-->
-    <string-array name="menu_measure">
+    <string-array name="measure_menu_content">
         <item>Source</item>
         <item>Horizontal</item>
         <item>Vertical</item>
         <item>Clear</item>
     </string-array>
     <!--Cursor menu content-->
-    <string-array name="menu_cursor">
+    <string-array name="cursor_menu_content">
         <item>Source</item>
     </string-array>
     <!--Analog channel-->
@@ -35,7 +35,7 @@
         <item>CH4</item>
     </string-array>
     <!--Horizontal measure items-->
-    <string-array name="menu_measure_horizontal">
+    <string-array name="horizontal_measure_menu_content">
         <item>Period</item>
         <item>Frequency</item>
         <item>Rising</item>
@@ -46,7 +46,7 @@
         <item>- Negative Width</item>
     </string-array>
     <!--Vertical measure items-->
-    <string-array name="menu_measure_vertical">
+    <string-array name="vertical_measure_menu_content">
         <item>Max</item>
         <item>Min</item>
         <item>Peak to Peak</item>
@@ -61,8 +61,77 @@
         <item>Negative Overshoot</item>
     </string-array>
     <!--Tools menu content-->
-    <string-array name="menu_tools_content">
+    <string-array name="tools_menu_content">
         <item>Factory Setup</item>
         <item>Self Calibration</item>
+        <item>REF</item>
+        <item>MATH</item>
+    </string-array>
+    <!--Timebase-->
+    <string-array name="timebase_string_array">
+        <item>2 ns</item>
+        <item>5 ns</item>
+        <item>10 ns</item>
+        <item>20 ns</item>
+        <item>50 ns</item>
+        <item>100 ns</item>
+        <item>200 ns</item>
+        <item>500 ns</item>
+        <item>1 us</item>
+        <item>2 us</item>
+        <item>5 us</item>
+        <item>10 us</item>
+        <item>20 us</item>
+        <item>50 us</item>
+        <item>100 us</item>
+        <item>200 us</item>
+        <item>500 us</item>
+        <item>1 ms</item>
+        <item>2 ms</item>
+        <item>5 ms</item>
+        <item>10 ms</item>
+        <item>20 ms</item>
+        <item>50 ms</item>
+        <item>100 ms</item>
+        <item>200 ms</item>
+        <item>500 ms</item>
+        <item>1 s</item>
+        <item>2 s</item>
+        <item>5 s</item>
+        <item>10 s</item>
+        <item>20 s</item>
+        <item>50 s</item>
+        <item>100 s</item>
+        <item>200 s</item>
+        <item>500 s</item>
+        <item>1000 s</item>
+    </string-array>
+
+    <!-- Volts/DIV, total 10 -->
+    <string-array name="VoltsDiv">
+        <item>2mV</item>
+        <item>5mV</item>
+        <item>10mV</item>
+        <item>20mV</item>
+        <item>50mV</item>
+        <item>100mV</item>
+        <item>200mV</item>
+        <item>500mV</item>
+        <item>1V</item>
+        <item>2V</item>
+        <item>5V</item>
+        <item>10V</item>
+    </string-array>
+    <string-array name="math_source">
+        <item>CH1</item>
+        <item>CH2</item>
+        <item>CH3</item>
+        <item>CH4</item>
+    </string-array>
+    <string-array name="math_operations">
+        <item>A + B</item>
+        <item>A - B</item>
+        <item>A x B</item>
+        <item>A / B</item>
     </string-array>
 </resources>

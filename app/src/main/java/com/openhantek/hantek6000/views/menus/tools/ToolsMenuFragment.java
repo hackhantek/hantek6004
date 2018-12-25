@@ -1,31 +1,27 @@
 package com.openhantek.hantek6000.views.menus.tools;
 
-
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.openhantek.hantek6000.R;
 import com.openhantek.hantek6000.presenters.menus.tools.ToolsMenuPresenter;
+import com.openhantek.hantek6000.views.dialogs.MathDialogFragment;
+import com.openhantek.hantek6000.views.dialogs.RefDialogFragment;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
- * A simple {@link Fragment} subclass to show tools menu.
+ * A simple {@link ListFragment} subclass to show tools menu.
  */
-public class ToolsMenuFragment extends Fragment implements ToolsMenuPresenter.View {
+public class ToolsMenuFragment extends ListFragment implements ToolsMenuPresenter.View {
 
     /**
      * A {@link ToolsMenuPresenter} to implement business logic of this view.
@@ -40,43 +36,27 @@ public class ToolsMenuFragment extends Fragment implements ToolsMenuPresenter.Vi
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tools_menu, container, false);
-    }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+        if (getActivity() == null) return;
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.tools_menu_content, android.R.layout.simple_list_item_1);
+        setListAdapter(adapter);
+    }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setupListView(view);
-    }
-
-    // Initialize List view.
-    private void setupListView(View rootView){
-        Context context = getContext();
-        if (context == null) return;
-
-        ArrayAdapter adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.menu_tools_content));
-        ListView listView = rootView.findViewById(R.id.tools_menu_list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(mItemClickListener);
-    }
-
-    // Handle list view click event.
-    private AdapterView.OnItemClickListener mItemClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == 0) {
-                mPresenter.handleFactorySetupClick();
-            } else if (position == 1) {
-                mPresenter.handleSelfCaliClick();
-            }
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        if (position == 0) {
+            mPresenter.handleFactorySetupClick();
+        } else if (position == 1) {
+            mPresenter.handleSelfCaliClick();
+        } else if (position == 2) {
+            mPresenter.handleRefClick();
+        } else if (position == 3) {
+            mPresenter.handleMathClick();
         }
-    };
+    }
 
     @Override
     public void askWhetherToFactorySetup() {
@@ -96,6 +76,22 @@ public class ToolsMenuFragment extends Fragment implements ToolsMenuPresenter.Vi
                 .setNegativeButton(R.string.self_cali_no, askDialogListener)
                 .create()
                 .show();
+    }
+
+    @Override
+    public void showRefDialog(){
+        if (getActivity() == null) return;
+
+        RefDialogFragment dialog = new RefDialogFragment();
+        dialog.show(getActivity().getSupportFragmentManager(), "ref_dialog");
+    }
+
+    @Override
+    public void showMathDialog() {
+        if (getActivity() == null) return;
+
+        MathDialogFragment dialog = new MathDialogFragment();
+        dialog.show(getActivity().getSupportFragmentManager(), "math_dialog");
     }
 
     @Override

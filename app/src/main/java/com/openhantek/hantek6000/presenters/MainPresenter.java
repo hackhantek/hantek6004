@@ -1,16 +1,16 @@
 package com.openhantek.hantek6000.presenters;
 
-import android.util.Log;
-
+import com.hantek.ht6000api.Channel;
+import com.hantek.ht6000api.HantekDevice;
 import com.hantek.ht6000api.HantekDeviceListener;
 import com.hantek.ht6000api.HantekSdk;
 import com.hantek.ht6000api.ht6000.AttenuationFactor;
 import com.hantek.ht6000api.ht6000.InputCoupling;
 import com.hantek.ht6000api.ht6000.TriggerSlope;
 import com.hantek.ht6000api.ht6000.TriggerSweep;
+import com.hantek.ht6000api.HtScopeSettings;
 import com.openhantek.hantek6000.models.HtUsbManagerInterface;
 import com.openhantek.hantek6000.models.MainDataSource;
-import com.openhantek.hantek6000.models.MainRepository;
 
 public class MainPresenter {
 
@@ -18,25 +18,18 @@ public class MainPresenter {
     private final HtUsbManagerInterface mHantekUsbManager;
     private final MainDataSource mDataSource;
 
-    public MainPresenter(MainPresenter.View view, HtUsbManagerInterface hantekUsbManager) {
+    public MainPresenter(View view, HtUsbManagerInterface hantekUsbManager, MainDataSource dataSource) {
         assert view != null;
-        assert  hantekUsbManager != null;
+        assert hantekUsbManager != null;
+        assert dataSource != null;
 
         mView = view;
         mHantekUsbManager = hantekUsbManager;
-        mDataSource = MainRepository.getInstance();
+        mDataSource = dataSource;
+        mDataSource.addListeners(mDataSourceListener);
     }
 
     //region Helper methods
-    private void loadRealDevice() {
-        int[] colors = mView.getChannelColors();
-        Object scopeView = mView.getScopeView();
-
-        assert colors != null;
-        assert scopeView != null;
-
-        mHantekUsbManager.loadRealDevice(mHtDeviceListener, colors, scopeView);
-    }
 
     // Hantek device listener
     private HantekDeviceListener mHtDeviceListener = new HantekDeviceListener() {
@@ -46,7 +39,11 @@ public class MainPresenter {
         }
 
         @Override
-        public void onScopeSettingsChanged(){
+        public void onScopeSettingsChanged() {
+            // 1. To support change timebase and volts/div after stopped.
+            // 2.Put updateScopeView before syncWithView to fix: horizontal trigger thumb
+            // too small when first start APP(#35).
+            mView.updateScopeView();
             syncWithView();
         }
 
@@ -71,6 +68,102 @@ public class MainPresenter {
         }
     };
 
+    // 用于接收 MainDtaSource 对象的消息。
+    private final MainDataSource.DataSourceListener mDataSourceListener
+            = new MainDataSource.DataSourceListener() {
+
+        @Override
+        public void onLoadRfcFileSuccessfully(Channel refChannel) {
+            mView.updateScopeViewRefChannel(refChannel);
+            // 更新参考波形标识符的显示状态，因为参考波形显示了，对应的标识符也需要显示出来。
+            mView.updateRefLevelVisibility(true);
+            // 更新参考波形标识符的位置
+            mView.updateRefLevelPos(mDataSource.getRefChannelPos());
+        }
+
+        @Override
+        public void onUpdateScopeViewRefChannelSetting(Channel refChannel) {
+            mView.updateScopeViewRefChannel(refChannel);
+        }
+
+        @Override
+        public void onSetRefViewPortPos(int refViewPortPos) {
+            mView.setRefViewPortPos(refViewPortPos);
+        }
+
+        @Override
+        public void onSetRefEnabled(boolean enabled) {
+            Channel refChannel = mDataSource.getRefChannel();
+            refChannel.setEnabled(enabled);
+            // update reference waveform
+            mView.updateScopeViewRefChannel(refChannel);
+            // update reference marker
+            mView.updateRefLevelVisibility(enabled);
+        }
+
+        @Override
+        public void onSetMathEnabled(boolean enabled) {
+            Channel mathChannel = mDataSource.getMathChannel();
+            mathChannel.setEnabled(enabled);
+            // update math channel waveform
+            mView.updateScopeViewMathChannel(mathChannel);
+            // update math marker status
+            mView.updateMathLevelVisibility(enabled);
+            // update math marker position
+            mView.updateMathLevelPos(mDataSource.getMathChannelPos());
+        }
+
+        @Override
+        public void onUpdateScopeViewMathChannelSettings(Channel mathChannel) {
+            mView.updateScopeViewMathChannel(mathChannel);
+        }
+    };
+
+    /**
+     * Enter demo mode, show demo mode entered dialog.
+     */
+    private void enterDemoMode() {
+        mHantekUsbManager.loadDemoDevice(mHtDeviceListener, mDataSource.getScopeSettings());
+
+        mView.showEnterDemoModelDialog();
+    }
+
+    private boolean isUsbConnected() {
+        return mHantekUsbManager.isScopeDeviceExist();
+    }
+
+    private boolean isWifiConnected() {
+        return false;
+    }
+
+    //endregion Helper methods
+
+    //region Presenter Method
+
+    /**
+     * Determine work mode.
+     * <p>There are 3 modes: USB/Wi-Fi/Demo</p>
+     */
+    public void determineWorkMode() {
+        if (isUsbConnected()) {
+            if (mHantekUsbManager.hasUsbPermission()) {
+                handleUsbPermissionGranted();
+            } else {
+                mView.requestUsbPermission(mHantekUsbManager.getUsbDevice());
+            }
+        } else {
+            // Hantek6xx4 don't support Wi-Fi, We put this code here to compatible with
+            // IDSO1070 code.
+            boolean isWifiConnected = isWifiConnected();
+            if (isWifiConnected) {
+                mView.showSearchingDevice();
+                mDataSource.searchWifiDevice();
+            } else {
+                enterDemoMode();
+            }
+        }
+    }
+
     /**
      * Synchronize mvp view with model status.
      */
@@ -82,12 +175,22 @@ public class MainPresenter {
             // sync channel marker visible with channel enabled status
             mView.updateChZeroLevelMarkerVisibility(mDataSource.isChannelEnabled(i), i);
             // update coupling in zero level marker
-            mView.updateChCouplingIndicator(i, mDataSource.getChInputCoupling(i));
+            mView.updateChCouplingIndicator(i, mDataSource.getInputCoupling(i));
         }
 
         // sync trigger level marker
         mView.updateTriggerLevelPos(mDataSource.getTriggerLevelPos());
         mView.updateTriggerLevelVisibility(true);
+
+        // sync reference view
+        if (mDataSource.isRefEnabled()) {
+            mView.updateScopeViewRefChannel(mDataSource.getRefChannel());
+        }
+
+        // sync math channel view
+        if (mDataSource.isMathEnabled()) {
+            mView.updateScopeViewMathChannel(mDataSource.getMathChannel());
+        }
 
         // trigger marker color
         mView.updateTriggerLevelColor(mDataSource.getTriggerSource());
@@ -99,60 +202,53 @@ public class MainPresenter {
         float vpPos = mView.getViewPortRelativePos();
         mView.setTriggerThumbPos(vpPos);
 
-        /* update horizontal trigger marker */
+        // Update horizontal trigger scroll bar thumb width.
+        int viewportSize = mView.getViewPortSize();
+        mView.updateScrollBarThumbWidth(viewportSize);
+
+        /* Update horizontal trigger marker position and range. */
         int xPos = HantekSdk.getTriggerXPos();
-        // 100: 水平触发范围[0,100]
+        // Horizontal trigger position when marker moved to most left.
+        // Trigger marker can only move within the viewport.
         float xTriggerMax = mView.getViewPortRightRelativePos() * 100;
+        // Horizontal trigger position when marker moved to most right.
         float xTriggerMin = mView.getViewPortLeftRelativePos() * 100;
+        // Why update the range?
+        // Because the viewport position can changed when user drag waveform left and right.
         mView.updateXTriggerMarker(xTriggerMin, xTriggerMax, xPos);
-    }
-    //endregion Helper methods
 
-    //region Presenter Method
+        // If trigger source changed by trigger quick settings popup window,
+        // trigger level marker will changed,
+        // need to update trigger quick settings popup window position.
+        if (mView.isTriggerQuickSettingsShowing()) {
+            mView.updateTriggerQuickSettings();
+        }
 
-    /**
-     * Check if specific USB device exist.
-     * <ul>
-     *     <li>exist：Check whether permission granted</li>
-     *     <ul>
-     *         <li>granted：setDevice</li>
-     *         <li>not granted：Request permission</li>
-     *     </ul>
-     *     <li>not exist: Ask if user need to load analog device</li>
-     * </ul>
-     * @param device_filter an xml file that specifies that any USB device with specified
-     *                      attributes should be filtered.
-     */
-    public void checkDeviceExist(int device_filter) {
-        if (mHantekUsbManager.isScopeDeviceExist(device_filter)) {
-            if (mHantekUsbManager.hasUsbPermission()) {
-                handleUsbPermissionGranted();
-            } else {
-                mView.requestUsbPermission(mHantekUsbManager.getUsbDevice());
-            }
+        // If in scroll mode, hide horizontal trigger marker and horizontal trigger scroll bar
+        if (mDataSource.isInRollMode()) {
+            mView.hideHorizontalTrigger();
         } else {
-            mView.askToLoadDemoDevice();
+            mView.showHorizontalTrigger();
         }
     }
 
+    /**
+     * Called when usb permission is granted
+     */
     public void handleUsbPermissionGranted() {
         if (mView.isAskDemoDialogShowing()) {
             mView.closeAskDemoDialog();
         }
         boolean success = mHantekUsbManager.setDevice();
         if (success)
-            loadRealDevice();
+            mHantekUsbManager.loadRealDevice(mHtDeviceListener, mDataSource.getScopeSettings());
     }
 
+    /**
+     * Releases exclusive access to USB, close usb send and receive thread.
+     */
     public void releaseDevice() {
         mHantekUsbManager.releaseDevice();
-    }
-
-    public void loadDemoDevice(int[] colors, Object scopeView) {
-        assert colors != null;
-        assert scopeView != null;
-
-        mHantekUsbManager.loadDemoDevice(mHtDeviceListener, colors, scopeView);
     }
 
     /**
@@ -170,7 +266,19 @@ public class MainPresenter {
      * @param position new position
      */
     public void handleChZeroMarkerDragEnded(int i, int position) {
+        // How much changed
+        int delta = position - mDataSource.getChannelPos(i);
+
         mDataSource.setChannelPos(i, position);
+
+        // If i is trigger source, change trigger level
+        if (i == mDataSource.getTriggerSource()) {
+            int triggerLevel = mDataSource.getTriggerLevelPos() + delta;
+            // Limit value cannot be out of range
+            if (triggerLevel < HantekDevice.SAMPLE_MIN) triggerLevel = HantekDevice.SAMPLE_MIN;
+            if (triggerLevel > HantekDevice.SAMPLE_MAX) triggerLevel = HantekDevice.SAMPLE_MAX;
+            mDataSource.setTriggerLevelPos(triggerLevel);
+        }
     }
 
     /**
@@ -214,15 +322,20 @@ public class MainPresenter {
      * @param attenuationFactor attenuation factor.
      */
     public void setAttenuationFactor(int chIndex, AttenuationFactor attenuationFactor) {
-        mDataSource.setAttenuationFacotr(chIndex, attenuationFactor);
+        mDataSource.setAttenuationFactor(chIndex, attenuationFactor);
     }
 
     /**
      * Set trigger source.
+     * <p>This will change trigger level to the new source channel zero level.</p>
      * @param source new trigger source
      */
     public void setTriggerSource(int source) {
         mDataSource.setTriggerSource(source);
+
+        // Change trigger level to the new source channel zero level
+        int level = mDataSource.getChannelPos(source);
+        mDataSource.setTriggerLevelPos(level);
     }
 
     /**
@@ -273,6 +386,7 @@ public class MainPresenter {
      */
     public void centerChannelLevel(int chIndex) {
         mDataSource.centerChannelLevel(chIndex);
+        mDataSource.centerTriggerLevel();
     }
 
     /**
@@ -312,6 +426,8 @@ public class MainPresenter {
      */
     public void changeSelectedChannel(int chIndex) {
         mDataSource.setSelectedChannel(chIndex);
+        // To support change selected channel after stop
+        mView.updateScopeView();
     }
 
     /**
@@ -377,32 +493,103 @@ public class MainPresenter {
     }
 
     /**
-     * 设置水平触发位置。
-     * @param position 想要设置的水平触发位置
+     * Change horizontal trigger position.
+     * @param position New horizontal trigger position.
      */
     public void changeTriggerXPos(int position) {
         HantekSdk.setTriggerXPos(position);
     }
 
-
     /**
-     * Set horizontal trigger position to center. (设置水平触发位置和视口位置到中间)。
+     * Set horizontal trigger position to center.
      */
     public void centerTriggerXPos() {
-        // 设置视口位置到中间
         mView.centerViewPort();
 
-        // 设置水平触发位置在中间。水平触发位置范围[0,100], 50 在中间
+        // Set horizontal trigger to center which range is [0,100].
         changeTriggerXPos(50);
     }
 
+    /**
+     * Get current scope settings.
+     * @return current scope settings
+     */
+    public HtScopeSettings getCurrentScopeSettings() {
+        HtScopeSettings settings = new HtScopeSettings();
+
+        for (int i = 0; i < mDataSource.getAnalogChannelCount(); i++) {
+            settings.setChEnabled(i, mDataSource.isChEnabled(i));
+            settings.setChZeroLevel(i, mDataSource.getChannelPos(i));
+            settings.setVoltsPerDivision(i, mDataSource.getVoltsPerDivision(i).ordinal());
+            settings.setAttenuationFactor(i, mDataSource.getAttenuationFactor(i).ordinal());
+            settings.setInputCoupling(i, mDataSource.getInputCoupling(i).ordinal());
+        }
+
+        settings.setTriggerSweep(mDataSource.getTriggerSweep().ordinal());
+        settings.setTriggerSource(mDataSource.getTriggerSource());
+        settings.setTriggerLevel(mDataSource.getTriggerLevelPos());
+        settings.setTriggerXPos(mDataSource.getTriggerXPos());
+        settings.setTriggerSlope(mDataSource.getTriggerSlope().ordinal());
+
+        settings.setRunning(mDataSource.isRunning());
+        settings.setMemoryDepth(mDataSource.getMemoryDepth());
+        settings.setTimeBase(mDataSource.getTimeBase().ordinal());
+        settings.setCaptureMode(mDataSource.getCaptureMode().ordinal());
+        settings.setFrequencyMeterEnabled(mDataSource.isFrequencyMeterEnabled());
+        settings.setCounterEnabled(mDataSource.isCounterEnabled());
+
+        settings.setAutoMeasureNumber(mDataSource.getAutoMeasureNumber());
+        for (int i = 0; i < settings.getAutoMeasureNumber(); i++ ) {
+            mDataSource.updateAutoMeasureTypes(settings.getAutoMeasureTypes());
+        }
+        for (int i = 0; i < settings.getAutoMeasureNumber(); i++ ) {
+            mDataSource.updateAutoMeasureSources(settings.getAutoMeasureSources());
+        }
+
+        return settings;
+    }
+
+    /**
+     * Called after view created
+     */
+    public void handleViewCreatedEvent() {
+        mView.keepScreenOn();
+    }
+
+    /**
+     * Read scope settings from device storage.
+     */
+    public void loadScopeSettings() {
+        mDataSource.loadScopeSettings();
+    }
+
+    /**
+     * Save current scope settings to device storage.
+     */
+    public void saveScopeSettings() {
+        mDataSource.saveScopeSettings();
+    }
+
+    /**
+     * Change reference level position.
+     * @param position reference level position
+     */
+    public void changeRefLevelPos(int position) {
+        mDataSource.setRefLevelPos(position);
+    }
+
+    /**
+     * Change math channel level position.
+     * @param position math channel level position.
+     */
+    public void changeMathLevelPos(int position) {
+        mDataSource.setMathLevelPos(position);
+    }
     //endregion Presenter Method
 
     public interface View {
 
         void requestUsbPermission(Object object);
-
-        void askToLoadDemoDevice();
 
         /**
          * Called when need to update Scope View.
@@ -412,8 +599,6 @@ public class MainPresenter {
         boolean isAskDemoDialogShowing();
 
         void closeAskDemoDialog();
-
-        int[] getChannelColors();
 
         Object getScopeView();
 
@@ -430,6 +615,12 @@ public class MainPresenter {
          * @param i channel index. 0:CH1...
          */
         void updateChZeroLevelMarkerVisibility(boolean channelEnabled, int i);
+
+        /**
+         * Update ref marker visibility.
+         * @param visible true: show false: hide
+         */
+        void updateRefLevelVisibility(boolean visible);
 
         void updateTriggerLevelPos(int triggerLevelPos);
 
@@ -520,22 +711,28 @@ public class MainPresenter {
         void setTriggerThumbPos(float pos);
 
         /**
-         * 更新触发标识符
-         * @param xTriggerMin 触发表示符调节范围下限
-         * @param xTriggerMax 触发标识符调节范围上限
-         * @param triggerXPos 当前水平触发位置
+         * Update horizontal trigger marker.
+         * @param xTriggerMin Horizontal trigger marker range lower value.
+         * @param xTriggerMax Horizontal trigger marker range higher value.
+         * @param triggerXPos Current horizontal trigger position.
          */
         void updateXTriggerMarker(float xTriggerMin, float xTriggerMax, int triggerXPos);
 
         /**
-         * 获取水平触发触发标识符设置范围上限。
-         * @return 水平触发触发标识符设置范围上限
+         * Get the position of the right side of the viewport within the memory depth.
+         * <br><br> Range is [0, 1.0]. When the viewport position is at the far left, the relative position is 0,
+         * and at the far right, the relative position is 1.0.
+         * <br> The viewport position is the position of the middle of the viewport
+         * @return the position of the right side of the viewport within the memory depth.
          */
         float getViewPortRightRelativePos();
 
         /**
-         * 获取水平触发触发标识符设置范围下限。
-         * @return 水平触发触发标识符设置范围下限
+         * Get the position of the left side of the viewport within the memory depth.
+         * <br><br> Range [0, 1.0]. When the viewport position is at the far left, the relative position is 0,
+         * and at the far right, the relative position is 1.0.
+         * <br> The viewport position is the position of the middle of the viewport
+         * @return the position of the left side of the viewport within the memory depth.
          */
         float getViewPortLeftRelativePos();
 
@@ -543,5 +740,87 @@ public class MainPresenter {
          * 调整视口位置至中间(Set view port position to center).
          */
         void centerViewPort();
+
+        /**
+         * {@link View} should show demo mode entered dialog.
+         */
+        void showEnterDemoModelDialog();
+
+        /**
+         * Get the number of points that can be drawn in the viewport
+         * under the current RUN/STOP status and timebase.
+         * @return the number of points that can be drawn in the viewport
+         */
+        int getViewPortSize();
+
+        /**
+         * Update the horizontal scroll bar thumb width.
+         * @param viewportSize viewport size.
+         */
+        void updateScrollBarThumbWidth(int viewportSize);
+
+        /**
+         * Indicate whether trigger quick settings popup window is showing on screen.
+         * @return true if the popup is showing, false otherwise
+         */
+        boolean isTriggerQuickSettingsShowing();
+
+        /**
+         * Updates the position of the trigger quick settings popup window.
+         */
+        void updateTriggerQuickSettings();
+
+        void showSearchingDevice();
+
+        /**
+         * Keep the screen on.
+         */
+        void keepScreenOn();
+
+        /**
+         * Hide horizontal trigger marker and horizontal trigger scroll bar.
+         */
+        void hideHorizontalTrigger();
+
+        /**
+         * Show horizontal trigger marker and horizontal trigger scroll bar.
+         */
+        void showHorizontalTrigger();
+
+        /**
+         * Update the scope view's reference channel.
+         * @param refChannel current reference channel.
+         */
+        void updateScopeViewRefChannel(Channel refChannel);
+
+        /**
+         * Set reference view port position.
+         * @param refViewPortPos reference view new position.
+         */
+        void setRefViewPortPos(int refViewPortPos);
+
+        /**
+         * Update reference level marker position.
+         * @param position reference level marker position.
+         */
+        void updateRefLevelPos(int position);
+
+        /**
+         * Update the scope view's math channel.
+         * @param mathChannel current math channel.
+         */
+        void updateScopeViewMathChannel(Channel mathChannel);
+
+        /**
+         * Update math marker visibility.
+         * @param visible true: show false: hide
+         */
+        void updateMathLevelVisibility(boolean visible);
+
+        /**
+         * Update math marker position.
+         * @param position math marker position
+         */
+        void updateMathLevelPos(int position);
     }
 }

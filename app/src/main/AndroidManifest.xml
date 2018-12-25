@@ -13,12 +13,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.MainActivity">
+        <!--singleInstance: MainActivity is not recreated when USB is plugged in-->
+        <activity android:name=".views.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- To have your application discover a particular USB device,
+               you can specify an intent filter to filter for the
+                android.hardware.usb.action.USB_DEVICE_ATTACHED intent.
+                Along with this intent filter, you need to specify a resource file that specifies
+                properties of the USB device, such as product and vendor ID. When users connect a
+                 device that matches your device filter, the system presents them with a dialog
+                 that asks if they want to start your application. If users accept,
+                 your application automatically has permission to access the device until the
+                 device is disconnected. -->
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <!--Declare the corresponding resource file that specifies the USB devices that we're
+            interested in.-->
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
         </activity>
 
         <!--Default theme is "AppTheme.NoActionBar", menu will full scrren-->
